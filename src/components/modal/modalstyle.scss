@@ -1,0 +1,54 @@
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+.app-modal-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  overflow: auto;
+}
+
+.app-modal-content {
+    width: 60%;
+    background: #fff;
+    margin-top: 15px;
+    margin-bottom: 15px;
+   padding: 0!important;
+}
+
+.app-modal-header{
+    border-bottom: solid 1px #ccc;
+    padding: 10px;
+}
+
+.app-modal-header h3 {
+    font-size: 1.5em;
+    color: #c52877;
+}
+
+.app-modal-body{
+  padding: 10px;
+}
+
+.app-modal-footer{
+   padding: 10px;
+   border-top: solid 1px #ccc;
+}
+
+.app-modal-footer button{
+   margin-right: 10px;
+}
+
+@include media-breakpoint-down(md) {
+   .app-modal-content {
+       width: 90%;
+   }
+}

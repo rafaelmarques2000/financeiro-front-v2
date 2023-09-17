@@ -1,0 +1,271 @@
+<template>
+   <div class="container-fluid">
+
+     <page-title :page-subtitle="data.pageTitle.subtitle" :page-title="data.pageTitle.title" :icon="data.pageTitle.icon"></page-title>
+     <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
+     <div class="alert alert-primary statistic-container">
+       <div class="row row-cols-2">
+         <div class="col-md-2 statistic-columns">
+           <h4 class="tipo-transacao-label">Saldo total</h4>
+           <span><money-format :value="totalAmountAccounts"></money-format></span>
+         </div>
+       </div>
+     </div>
+
+
+     <div class="page-action">
+       <button class="btn btn-primary app-button" @click="viewOpenModalForm" type="button" ><font-awesome-icon icon="fa-solid fa-circle-plus" /></button>
+       <button class="btn btn-secondary app-button" @click="viewOpenCloseFilter" type="button"><font-awesome-icon icon="fa-solid fa-filter" /></button>
+       <div class="show-per-page">
+         <select class="form-select show-pages" @change="viewChangeLimitPerPage" v-model="data.pagination.limit">
+           <option value="5">5</option>
+           <option value="10">10</option>
+           <option value="15">15</option>
+           <option value="50">50</option>
+           <option value="100">100</option>
+         </select>
+       </div>
+     </div>
+
+     <div class="filter-body" v-if="data.filter.open">
+       <div class="row row-cols-1">
+         <div class="col-md-6">
+           <label class="form-label">Descrição</label>
+           <div class="input-group">
+             <input type="text" v-model="data.filter.description" class="form-control">
+           </div>
+         </div>
+         <div class="col-md-4">
+           <label class="form-label">Data</label>
+           <div class="calendar-content d-flex">
+           <v-date-picker
+               mode="date"
+               v-model = "data.filter.range"
+               is-range
+           >
+             <template v-slot="{ inputValue, inputEvents, isDragging }">
+               <div class="d-flex">
+                 <input class="form-control"
+                        :value="inputValue.start"
+                        v-on="inputEvents.start"
+                 />
+                 <span style="padding: 10px">até</span>
+                 <input disabled style="margin-right: 10px"
+                        class="form-control"
+                        :value="inputValue.end"
+                        v-on="inputEvents.end"
+                 />
+               </div>
+             </template>
+           </v-date-picker>
+           <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
+             <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
+           </button>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <table class="table table-striped page-table">
+          <thead class="page-table-header">
+             <tr>
+                 <td>Descrição</td>
+                 <td>Saldo</td>
+                 <td>Ultima atualização</td>
+                 <td></td>
+             </tr>
+          </thead>
+          <tbody class="page-table-body">
+             <tr v-for="item in data.accounts">
+                <td data-title="Descrição">{{item.description}}</td>
+                <td data-title="Saldo"><money-format :value="item.amount"></money-format> </td>
+                <td data-title="Ultima atualização">{{formatDateAndHour(item.updated_at)}}</td>
+                <td>
+                   <div class="table-actions d-flex">
+                     <button type="button"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
+                     <button type="button" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
+                   </div>
+                </td>
+             </tr>
+          </tbody>
+     </table>
+
+     <div class="row">
+       <div class="col-12">
+         <nav aria-label="Page navigation example">
+           <ul class="pagination">
+             <li class="page-item"><a @click.prevent="viewListNavigation('prev')" class="page-link" href="#">Anterior</a></li>
+             <li v-for="page in data.pagination.pages" class="page-item">
+               <span class="page-link" v-if="page === '...'">...</span>
+               <a v-else @click.prevent="viewChangePageByPageNumber(page)" class="page-link" :class="{active: data.pagination.current_page === page}" href="#">{{page}}</a>
+             </li>
+             <li class="page-item"><a  @click.prevent="viewListNavigation('next')" class="page-link" href="#">Proximo</a></li>
+           </ul>
+         </nav>
+       </div>
+     </div>
+     <modal v-if="data.modal.show" @close-modal="viewCloseModal" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-md-12">
+                      <label class="form-label">Descrição</label>
+                      <input type="text" v-model="data.account.description" class="form-control" placeholder="Digite uma descrição">
+                  </div>
+              </div>
+
+          </div>
+     </modal>
+   </div>
+</template>
+
+<script>
+
+import {computed, onMounted, reactive, watch} from "vue";
+import PageTitle from "@/components/page_title/pagetile.vue";
+import {useRoute, useRouter} from "vue-router";
+import {
+  navigatePages,
+  openCloseFilter, renderModalTitle,
+  renderPageTitle, searchFilter,
+  setInitialDateFilter,
+} from "@/services/view/contas/contasviewservice";
+import Loading from "@/components/loading/loading.vue";
+import {
+  accountlistAll,
+  deleteAccount,
+  getAccountPeriodGeneralStatistic,
+  saveAccount
+} from "@/services/api/accountService";
+import Badge from "@/components/badge/badge.vue";
+import MoneyFormat from "@/components/money/moneyformat.vue";
+import {generatePagesArray} from "@/services/utils/Pagination";
+import {formatDateAndHour} from "@/services/utils/date";
+import Modal from "@/components/modal/modal.vue";
+import {getAccountType} from "@/services/api/accountTypeService";
+import {alertConfirm} from "@/helper/alertHelper";
+
+export default {
+  components: {Modal, MoneyFormat, Badge, Loading, PageTitle},
+  setup(){
+     let route = useRoute();
+     let router = useRouter();
+     let data = reactive({
+          modal:{
+              title:"Nova Conta",
+              icon: "",
+              show: false
+          },
+          pageTitle: {
+              title: "",
+              subtitle: "",
+              icon: ""
+          },
+          filter: {
+             open: true,
+             description: "",
+             range: ""
+          },
+          loading: {
+             show : false
+          },
+          statistics: {},
+          pagination: {
+              pages: [],
+              limit: 15,
+              current_page:1,
+              totalPages: 0,
+              totalRows: 0
+          },
+          account:{
+              id:"",
+              description: "",
+              account_type_id: ""
+          },
+          accounts: null
+      });
+
+     const viewOpenCloseFilter = () => {
+         openCloseFilter(data)
+     }
+
+    const viewChangeLimitPerPage = () => {
+       accountlistAll(data, route)
+    }
+
+    const viewListNavigation= (direction) => {
+        navigatePages(data, route, direction)
+    }
+
+    const viewChangePageByPageNumber = (page) => {
+        data.pagination.current_page = page
+        accountlistAll(data, route)
+    }
+
+    const viewSearchFilter = () => {
+        searchFilter(data, route)
+    }
+
+    const viewOpenModalForm = () => {
+        renderModalTitle(data, route)
+        data.modal.show = true
+    }
+
+    const viewCloseModal = () => {
+        data.modal.show = false
+    }
+
+    const viewModalSaveData = () => {
+         saveAccount(data, route, router)
+    }
+
+    const viewDeleteAccountConfirmation = (id, description) => {
+        alertConfirm("Confirmação", `Deseja deletar a conta ${description}?`, () =>{
+            data.account.id = id
+            deleteAccount(data, route)
+        })
+    }
+
+    //COMPUTED OR WATCHERS
+
+    const totalAmountAccounts = computed(() => {
+      return data.statistics.period_amount /100;
+    })
+
+    watch(() => data.accounts , (accounts) => {
+      if(data.pagination.current_page > 1 && accounts.length === 0) {
+        data.pagination.current_page -= 1
+        accountlistAll(data, route)
+      }
+      data.pagination.pages = generatePagesArray(data.pagination.current_page, data.pagination.totalRows, data.pagination.limit, 8)
+    })
+
+     onMounted(() => {
+         renderPageTitle(data, route)
+         setInitialDateFilter(data)
+         accountlistAll(data, route)
+         getAccountPeriodGeneralStatistic(data, route)
+         getAccountType(data, route)
+     })
+
+
+      return{
+        data,
+        viewOpenCloseFilter,
+        viewChangeLimitPerPage,
+        viewListNavigation,
+        viewChangePageByPageNumber,
+        viewSearchFilter,
+        viewCloseModal,
+        viewModalSaveData,
+        viewOpenModalForm,
+        viewDeleteAccountConfirmation,
+        formatDateAndHour,
+        totalAmountAccounts
+      }
+  }
+}
+</script>
+
+<style scoped lang="scss">
+  @import "contasstyle";
+</style>

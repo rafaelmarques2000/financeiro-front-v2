@@ -1,0 +1,63 @@
+$backgroundColor: #ff92c6;
+
+#login-view{
+  width: 100%;
+  background: url("../../assets/images/pig.jpg") ;
+  background-position:bottom;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+}
+
+.login-title{
+   text-align: center;
+   margin-bottom: 30px;
+   color: #ff92c6;
+}
+
+.login-subtitle{
+    font-weight: 100;
+    font-size: 0.6em;
+    padding-bottom: 10px;
+    color: #d24c87;
+}
+
+.login-input{
+   background: #ffffff;
+   padding: 14px;
+   border: solid 1px #ff92c6;
+}
+
+.login-input::placeholder{
+    color:#ff92c6;
+}
+
+.login-input:focus{
+   background: none;
+}
+
+.login-card-custom{
+   border: none;
+   box-shadow: none;
+   background: #fff;
+   border-radius: 20px;
+}
+
+.login-btn{
+   background: #ff92c6!important;
+   padding: 10px;
+   font-weight: bold;
+   border: none;
+}
+
+.login-footer{
+   display: flex;
+   padding-top: 15px;
+}
+
+.login-footer p{
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.0em;
+    text-align: center;
+}

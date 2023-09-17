@@ -1,0 +1,105 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+.statistic-columns{
+  margin-right: 15px;
+  margin-bottom: 12px;
+}
+
+.statistic-container{
+  border-radius: 0;
+  border: none;
+}
+
+.page-action{
+  display: flex;
+  margin-top: 15px;
+}
+
+.page-action button {
+  margin-right: 10px;
+}
+
+.show-per-page {
+  display: flex;
+  justify-content: flex-end;
+  width:100%;
+}
+
+.show-pages {
+  width: 100px;
+  text-align: center;
+}
+
+.filter-body{
+  background: #f5f1f1;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.page-table {
+  margin-top: 18px;
+}
+
+.page-table-body tr td{
+  position: relative;
+}
+
+.page-table .table-actions button{
+  margin-right: 10px;
+}
+
+.page-table-header tr td{
+     background: #d24c87;
+     font-weight: 600;
+     color: #fff;
+}
+
+
+.page-item a:link, .page-item a:visited{
+    color:#c52877!important;
+}
+
+.page-link.active {
+    background: #f88aba !important;
+    border: solid 1px #d24c87!important;
+    color: #fff!important;
+}
+
+
+//MOBILE
+
+@include media-breakpoint-down(md) {
+
+  .page-table-body tr{
+    margin-bottom: 15px;
+    display: block;
+    border: solid 1px #ccc;
+  }
+
+
+  .page-table-body tr td{
+    display: block;
+    text-align: right;
+  }
+
+  .page-table-body tr td:before{
+    content: attr(data-title);
+    position: absolute;
+    display: block;
+    left: 15px;
+    font-weight: 600;
+  }
+
+  .page-table .table-actions button{
+    margin-right: 10px;
+    width: 100%;
+  }
+
+  .page-table-header{
+    display: none;
+  }
+}
+

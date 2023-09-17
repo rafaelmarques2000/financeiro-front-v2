@@ -1,0 +1,24 @@
+.col-margin{
+  margin-bottom: 10px;
+}
+
+.module-icon{
+    font-size: 5em;
+    color: #e15794;
+}
+
+.module-name {
+    font-weight: bold;
+    margin-top: 12px;
+    font-size: 1.2em;
+}
+
+.module-card{
+    cursor: pointer;
+    transition: background-color .5s;
+}
+
+.module-card:hover{
+    background: #ff92c6;
+    color: #fff!important;
+}
