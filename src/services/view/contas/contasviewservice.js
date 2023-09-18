@@ -29,24 +29,26 @@ const renderPageTitle = (data, route) => {
     }
 }
 
-const renderModalTitle = (data, route) => {
+const renderModalTitle = (data, route, operation, accountDescription) => {
+
       let module = route.params.module
-        if(module === "contas"){
-            data.modal.title = "Nova conta"
-            data.modal.icon = "fa-solid fa-circle-plus"
+
+    if(module === "contas"){
+            data.modal.title = operation === "new" ? "Nova conta" : `Editar - ${accountDescription}`
+            data.modal.icon =  operation === "new" ? "fa-solid fa-circle-plus" : "fa-solid fa-pen-to-square"
         }
 
         if(module === "cartoes"){
             data.modal = {
-                title: "Novo cartão",
-                icon: "fa-solid fa-circle-plus"
+                title : operation === "new" ? "Novo cartão" : `Editar - ${accountDescription}`,
+                icon : operation === "new" ? "fa-solid fa-circle-plus" : "fa-solid fa-pen-to-square"
             }
         }
 
         if(module === "caixa"){
             data.modal = {
-                title: "Novo caixa",
-                icon: "fa-solid fa-circle-plus"
+                title : operation === "new" ? "Novo Caixa" : `Editar - ${accountDescription}`,
+                icon : operation === "new" ? "fa-solid fa-circle-plus" : "fa-solid fa-pen-to-square"
             }
         }
 }

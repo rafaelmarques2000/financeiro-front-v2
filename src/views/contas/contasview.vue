@@ -77,12 +77,12 @@
           </thead>
           <tbody class="page-table-body">
              <tr v-for="item in data.accounts">
-                <td data-title="Descrição">{{item.description}}</td>
-                <td data-title="Saldo"><money-format :value="item.amount"></money-format> </td>
-                <td data-title="Ultima atualização">{{formatDateAndHour(item.updated_at)}}</td>
+                <td @click.self="viewEnterTransaction(item.id)" data-title="Descrição">{{item.description}}</td>
+                <td @click.self="viewEnterTransaction(item.id)" data-title="Saldo"><money-format :value="item.amount"></money-format> </td>
+                <td @click.self="viewEnterTransaction(item.id)" data-title="Ultima atualização">{{formatDateAndHour(item.updated_at)}}</td>
                 <td>
                    <div class="table-actions d-flex">
-                     <button type="button"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
+                     <button type="button" @click="viewOpenModalEditForm(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
                      <button type="button" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
                    </div>
                 </td>
@@ -132,9 +132,9 @@ import {
 import Loading from "@/components/loading/loading.vue";
 import {
   accountlistAll,
-  deleteAccount,
+  deleteAccount, getAccountById,
   getAccountPeriodGeneralStatistic,
-  saveAccount
+  saveAccount, updateAccount
 } from "@/services/api/accountService";
 import Badge from "@/components/badge/badge.vue";
 import MoneyFormat from "@/components/money/moneyformat.vue";
@@ -153,7 +153,8 @@ export default {
           modal:{
               title:"Nova Conta",
               icon: "",
-              show: false
+              show: false,
+              operation: "new"
           },
           pageTitle: {
               title: "",
@@ -206,16 +207,31 @@ export default {
     }
 
     const viewOpenModalForm = () => {
-        renderModalTitle(data, route)
+        renderModalTitle(data, route, "new")
         data.modal.show = true
+        data.modal.operation = "new"
     }
 
     const viewCloseModal = () => {
         data.modal.show = false
+        data.account.id = ""
+        data.account.description = ""
     }
 
     const viewModalSaveData = () => {
-         saveAccount(data, route, router)
+         if(data.modal.operation === "new") {
+           saveAccount(data, route, router)
+         }else{
+            updateAccount(data, route)
+         }
+    }
+
+    const viewOpenModalEditForm = (id, description) => {
+       data.account.id = id
+       renderModalTitle(data, route, "edit", description)
+       getAccountById(data, route)
+       data.modal.show = true
+       data.modal.operation = "edit"
     }
 
     const viewDeleteAccountConfirmation = (id, description) => {
@@ -223,6 +239,11 @@ export default {
             data.account.id = id
             deleteAccount(data, route)
         })
+    }
+
+    const viewEnterTransaction = (id) => {
+        let module = route.params.module
+        router.push({name: "transanctions_module", params: {module, id}})
     }
 
     //COMPUTED OR WATCHERS
@@ -259,6 +280,8 @@ export default {
         viewModalSaveData,
         viewOpenModalForm,
         viewDeleteAccountConfirmation,
+        viewOpenModalEditForm,
+        viewEnterTransaction,
         formatDateAndHour,
         totalAmountAccounts
       }

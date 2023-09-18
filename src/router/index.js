@@ -3,6 +3,7 @@ import LoginView from "@/views/login/loginview.vue";
 import Home from "@/views/home/homeview.vue"
 import Modules from "@/views/module_select/moduleselectview.vue";
 import Contas from "@/views/contas/contasview.vue";
+import Transactions from "@/views/transactions/transactionview.vue";
 import store from "@/store";
 import {checkValidToken} from "@/services/api/authService";
 
@@ -27,6 +28,11 @@ const routes = [
          path: '/app/modules/:module',
          name: 'conta_module',
          component: Contas
+       },
+       {
+         path: '/app/modules/:module/:id/transactions',
+         name: 'transanctions_module',
+         component: Transactions
        },
      ]
   }
@@ -54,27 +60,6 @@ router.beforeEach((to, from) => {
             store.commit("clearState")
             return router.push({name: "login"})
         })
-
-        // if(to.meta.enableBreadcrumb) {
-        //     let routeMeta = to.meta
-        //     routeMeta.breadcrumb.map((item) => {
-        //
-        //         if(item.first && item.isLink) {
-        //             item.name = store.getters.getLastRoute[0].toUpperCase() + store.getters.getLastRoute.slice(1)
-        //             item.path = `/app/${store.getters.getLastRoute}`
-        //             return item
-        //         }
-        //
-        //         if (item.name === "Transações" && item.isLink) {
-        //             item.path = from.path
-        //             return item
-        //         }
-        //         return item
-        //     })
-        //     store.commit("setRouteMetaData", routeMeta)
-        // }else{
-        //     store.commit("setRouteMetaData", [])
-        // }
     }
 });
 

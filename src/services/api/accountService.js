@@ -25,6 +25,25 @@ const accountlistAll = (data, route) => {
 
 }
 
+const getAccountById = (data, route) => {
+    data.loading.show = true
+    let userId = Store.getters.userData.user_id
+    httpService.get(`/users/${userId}/accounts/${data.account.id}`).then(result => {
+        data.loading.show = false
+        data.account.id = result.data.id
+        data.account.description = result.data.description
+        data.account.account_type_id = result.data.accountType.id
+    }).catch(error => {
+        data.loading.show = false
+        alertError("Atenção", "Falha ao obter dados da conta, tente novamente ou contate o administrador")
+    })
+}
+
+const getAccountByIdPromisse = (id) => {
+    let userId = Store.getters.userData.user_id
+    return httpService.get(`/users/${userId}/accounts/${id}`)
+}
+
 const saveAccount = (data, route) => {
     let userId = Store.getters.userData.user_id
     data.loading.show = true
@@ -43,10 +62,30 @@ const saveAccount = (data, route) => {
     })
 }
 
+const updateAccount = (data, route) => {
+    let userId = Store.getters.userData.user_id
+    data.loading.show = true
+
+    httpService.put(`/users/${userId}/accounts/${data.account.id}`, data.account).then(result => {
+       data.loading.show = false
+       alertSuccess("sucesso!!", "Conta atualizada com sucesso").then(alertResult => {
+            accountlistAll(data, route)
+            data.modal.show = false
+            data.account.description = ""
+            data.accounts.id = ""
+
+       })
+    }).catch(error => {
+       alertError("Atenção", "Falha ao atualizar conta, tente novamente ou contate o administrador")
+    })
+}
+
+
 const deleteAccount = (data, route) => {
     let userId = Store.getters.userData.user_id
     data.loading.show = true
     httpService.delete(`/users/${userId}/accounts/${data.account.id}`).then(result => {
+        data.loading.show = false
         alertSuccess("Sucesso!", "Conta deletada com sucesso").then(result => {
             if(result.isConfirmed){
                 data.account.id = ""
@@ -74,8 +113,6 @@ const getAccountPeriodGeneralStatistic = (data, route) => {
 }
 
 
-
-
 function buildUrl(userId,uri, data, module) {
     let url = `/users/${userId}/${uri}?limit=${data.pagination.limit}&page=${data.pagination.current_page}`
 
@@ -100,7 +137,10 @@ function buildUrl(userId,uri, data, module) {
 
 export {
     accountlistAll,
+    getAccountById,
     saveAccount,
     deleteAccount,
+    updateAccount,
+    getAccountByIdPromisse,
     getAccountPeriodGeneralStatistic
 }
