@@ -3,6 +3,7 @@ import {formatDate} from "@/services/utils/date";
 import httpService from "@/services/http/HttpService";
 import {alertError, alertSuccess} from "@/helper/alertHelper";
 import Swal from "sweetalert2";
+import {getMoneyValue} from "@/services/utils/helpers";
 
 
 const getTransactionStatisticAccountPeriod = (data, route) => {
@@ -41,6 +42,40 @@ const getAccountTransactions = (data, route) => {
     })
 }
 
+const saveTransaction = (data, route) => {
+    let userId = Store.getters.userData.user_id
+    let accountId = route.params.id
+
+    let transaction = data.transaction
+
+    if(transaction.installment === "false") {
+        delete transaction['installment']
+        delete transaction['amount_installments']
+    }
+    transaction.amount = getMoneyValue(transaction.amount)
+
+    data.loading.show = true
+
+    httpService.post(`/users/${userId}/accounts/${accountId}/transactions`, transaction).then(result => {
+       data.loading.show = false
+       alertSuccess("Sucesso!!", "Transação cadastrada com sucesso").then(alertResult => {
+           data.transaction.description = null;
+           data.transaction.date = null;
+           data.transaction.transaction_type = "";
+           data.transaction.amount = null;
+           data.transaction.transaction_category = "";
+           data.categoryDisable = true
+           data.transaction.installment = "false";
+           data.transaction.amount_installments = null;
+           data.simulateInstallment = null
+           data.transaction.installment_description = null
+       })
+    }).catch(error => {
+        data.loading.show = false
+        alertError("Atenção", "Falha ao cadastrar transação, tente novamente ou contate o administrador")
+    })
+}
+
 const deleteTransaction = (data, route) => {
     data.loading.show = true
     let userId = Store.getters.userData.user_id
@@ -64,5 +99,6 @@ const deleteTransaction = (data, route) => {
 export {
     getTransactionStatisticAccountPeriod,
     deleteTransaction,
-    getAccountTransactions
+    getAccountTransactions,
+    saveTransaction
 }

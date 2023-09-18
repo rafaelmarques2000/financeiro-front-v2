@@ -71,7 +71,7 @@
 
 //MOBILE
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-between(sd, md) {
 
   .page-table-body tr{
     margin-bottom: 15px;

@@ -37,9 +37,35 @@ const navigateTransactionPages = (data, route, direction) => {
     }
 }
 
+const validateFormAndSubmit = (data, callback) => {
+    let properties = Object.getOwnPropertyNames(data.transaction);
+    console.log(properties)
+    for(let i=0; i<properties.length; i++) {
+
+        if(properties[i] === "installment_description") {
+            continue;
+        }
+
+        if(data.transaction[properties[i]] === "" || data.transaction[properties[i]] == null) {
+            console.log(`ERROR: ${properties[i]}`)
+            alertError("Atenção",`Preencha o campo ${data.inputLabels[i]}`)
+            return;
+        }
+        if(properties[i] === "installment" &&
+            data.transaction['installment'] === "true"
+            && data.transaction.amount_installments === 0
+            && data.disableInstallment === false) {
+            alertError("Atenção", "Numero de parcelas inválido")
+            return;
+        }
+    }
+    callback()
+}
+
 
 export {
     renderTransactionPageTitle,
     navigateTransactionPages,
-    searchTransactionFilter
+    searchTransactionFilter,
+    validateFormAndSubmit
 }

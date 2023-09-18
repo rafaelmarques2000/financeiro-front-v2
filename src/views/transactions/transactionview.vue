@@ -150,7 +150,7 @@
 
                 <div class="col-6">
                   <label for="valor" class="form-label">Valor</label>
-                  <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.amount" class="form-control"></CurrencyInput>
+                  <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.transaction.amount" class="form-control"></CurrencyInput>
                 </div>
               </div>
 
@@ -171,7 +171,7 @@
               </div>
               <div class="col-md-1" v-if="!data.disableInstallment">
                 <label for="parcelas" class="form-label">Parcelas</label>
-                <input type="text" @change="simulateInstallmentsAmount" v-model="data.transaction.amount_installments" class="form-control" :disabled="data.selectStates.installmentDisable" id="parcelas" placeholder="Parcelas">
+                <input type="text" @keyup="viewSimulateInstallmentsAmount" v-model="data.transaction.amount_installments" class="form-control" :disabled="data.selectStates.installmentDisable" id="parcelas" placeholder="Parcelas">
               </div>
               <div class="col-md-2" v-if="!data.disableInstallment">
                 <label for="valor_parcela" class="form-label">Valor parcela</label>
@@ -207,12 +207,12 @@ import {alertConfirm} from "@/helper/alertHelper";
 import {
   navigateTransactionPages,
   renderTransactionPageTitle,
-  searchTransactionFilter
+  searchTransactionFilter, validateFormAndSubmit
 } from "@/services/view/transactions/transactionviewservice";
 import {
   deleteTransaction,
   getAccountTransactions,
-  getTransactionStatisticAccountPeriod
+  getTransactionStatisticAccountPeriod, saveTransaction
 } from "@/services/api/transactionService";
 import CurrencyInput from "@/components/CurrencyInput.vue";
 import {listTransactionType} from "@/services/api/TransactionTypeService";
@@ -255,7 +255,7 @@ export default {
        transactionCategories: [],
        disableInstallment:false,
        inputLabels: [
-         "Nome Fatura","Descrição", "Data" , "Tipo", "Valor", "Categoria", "Quantidade"
+          "Descrição", "Nome Fatura", "Data" , "Tipo", "Valor", "Categoria", "Quantidade"
        ],
        selectStates: {
          categoryDisable: true,
@@ -263,19 +263,19 @@ export default {
        },
        simulateInstallment: 0,
        isInstallment: false,
-          transaction: {
-             id: "",
-            installment_description:"",
-            description: "",
-            date: "",
-            transaction_type:"",
-            amount: null,
-            transaction_category: "",
-            installment: "false",
-            amount_installments: 0,
-            related_installments: []
-          },
-          transactions: null
+       transactionId: "",
+        transaction: {
+          description: "",
+          installment_description:"",
+          date: "",
+          transaction_type:"",
+          transaction_category: "",
+          amount: null,
+          installment: "false",
+          amount_installments: 0,
+          related_installments: []
+        },
+        transactions: null
       });
 
      const viewOpenCloseFilter = () => {
@@ -308,18 +308,31 @@ export default {
 
     const viewCloseModal = () => {
         data.modal.show = false
+        data.transaction = {
+          installment_description:"",
+          description: "",
+          date: "",
+          transaction_type:"",
+          amount: null,
+          transaction_category: "",
+          installment: "false",
+          amount_installments: 0,
+          related_installments: []
+        }
     }
 
     const viewModalSaveData = () => {
-         if(data.modal.operation === "new") {
-           saveAccount(data, route, router)
-         }else{
-            updateAccount(data, route)
-         }
+        validateFormAndSubmit(data, () => {
+            if(data.modal.operation === "new") {
+              saveTransaction(data, route)
+            }else{
+              updateAccount(data, route)
+            }
+        })
     }
 
     const viewOpenModalEditForm = (id, description) => {
-       data.transaction.id = id
+       data.transactionId = id
        getAccountById(data, route)
        data.modal.show = true
        data.modal.operation = "edit"
@@ -332,6 +345,14 @@ export default {
             data.transaction.id = id
             deleteTransaction(data, route)
         })
+    }
+
+    const viewSimulateInstallmentsAmount = () => {
+       if(data.transaction.amount_installments === "") {
+           data.simulateInstallment = 0;
+           return;
+       }
+       data.simulateInstallment  =data.transaction.amount/ data.transaction.amount_installments
     }
 
     //COMPUTED OR WATCHERS
@@ -384,6 +405,7 @@ export default {
         viewOpenModalForm,
         viewDeleteAccountConfirmation: viewDeleteTransactionConfirmation,
         viewOpenModalEditForm,
+        viewSimulateInstallmentsAmount,
         formatDateAndHour
       }
   }
