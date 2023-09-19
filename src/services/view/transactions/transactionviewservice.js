@@ -54,7 +54,7 @@ const validateFormAndSubmit = (data, callback) => {
         if(properties[i] === "installment" &&
             data.transaction['installment'] === "true"
             && data.transaction.amount_installments === 0
-            && data.disableInstallment === false) {
+            && data.modal.operation !== "edit") {
             alertError("Atenção", "Numero de parcelas inválido")
             return;
         }
@@ -62,10 +62,20 @@ const validateFormAndSubmit = (data, callback) => {
     callback()
 }
 
+const formatParceladoLabel = (value) => {
+    return value === false ? "Não" : "Sim"
+}
+
+const formatEmptyValue = (value) => {
+    return (value == null || value === "") ? " - " : value
+}
+
 
 export {
     renderTransactionPageTitle,
     navigateTransactionPages,
     searchTransactionFilter,
+    formatParceladoLabel,
+    formatEmptyValue,
     validateFormAndSubmit
 }

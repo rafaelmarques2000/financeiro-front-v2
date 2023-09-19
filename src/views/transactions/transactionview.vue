@@ -66,7 +66,8 @@
        </div>
      </div>
 
-     <table class="table table-striped page-table">
+     <no-content v-if="data.transactions.length === 0" message="Não há registros"></no-content>
+     <table v-else class="table table-striped page-table">
           <thead class="page-table-header">
              <tr>
                  <td>Descrição</td>
@@ -84,18 +85,18 @@
           </thead>
           <tbody class="page-table-body">
              <tr v-for="item in data.transactions">
-                <td data-title="Descrição">{{item.description}}</td>
-                <td data-title="Nome fatura">{{item.installment_description}}</td>
-                <td data-title="Data">{{item.date}}</td>
-                <td data-title="Tipo">{{item.transaction_type.description}}</td>
-                <td data-title="Categoria">{{item.category.description}}</td>
-                <td data-title="Valor"><money-format :value="item.amount"></money-format> </td>
-                <td data-title="Parcelado">{{item.installment}}</td>
-                <td data-title="Qtd.Parcelas">{{item.amount_installment}}</td>
-                <td data-title="N.Parcela">{{item.current_installment}}</td>
-                <td data-title="Verificado"><input type="checkbox" @change="" :checked="item.checked"/></td>
+                <td data-title="Descrição" :class="{'checked-row': item.checked}">{{item.description}}</td>
+                <td data-title="Nome fatura" :class="{'checked-row': item.checked}">{{item.installment_description}}</td>
+                <td data-title="Data" :class="{'checked-row': item.checked}">{{item.date}}</td>
+                <td data-title="Tipo" :class="{'checked-row': item.checked}">{{item.transaction_type.description}}</td>
+                <td data-title="Categoria" :class="{'checked-row': item.checked}">{{item.category.description}}</td>
+                <td data-title="Valor" :class="{'checked-row': item.checked}"><money-format :value="item.amount"></money-format> </td>
+                <td data-title="Parcelado" :class="{'checked-row': item.checked}">{{formatParceladoLabel(item.installment)}}</td>
+                <td data-title="Qtd.Parcelas" :class="{'checked-row': item.checked}">{{formatEmptyValue(item.amount_installment)}}</td>
+                <td data-title="N.Parcela" :class="{'checked-row': item.checked}">{{formatEmptyValue(item.current_installment)}}</td>
+                <td data-title="Verificado" :class="{'checked-row': item.checked}"><input type="checkbox" @change="viewCheckedTransaction(item.id, $event)" :checked="item.checked"/></td>
 
-                <td>
+                <td :class="{'checked-row': item.checked}">
                    <div class="table-actions d-flex">
                      <button type="button" @click="viewOpenModalEditForm(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
                      <button type="button" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
@@ -154,7 +155,7 @@
                 </div>
               </div>
 
-            <div class="row row-cols-2 transaction-form-rows">
+            <div  class="row row-cols-2 transaction-form-rows">
               <div class="col-md-6">
                 <label for="categoria" class="form-label">Categoria</label>
                 <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">
@@ -162,18 +163,18 @@
                   <option v-for="item in data.transactionCategories" :value="item.id">{{item.description}}</option>
                 </select>
               </div>
-              <div class="col-md-3" v-if="!data.disableInstallment">
+              <div class="col-md-3" v-if="!isEdit">
                 <label for="categoria" class="form-label">Parcelamento ?</label>
                 <select class="form-select" v-model="data.transaction.installment">
                   <option value="false">Não</option>
                   <option value="true">Sim</option>
                 </select>
               </div>
-              <div class="col-md-1" v-if="!data.disableInstallment">
+              <div  class="col-md-1" v-if="!isEdit">
                 <label for="parcelas" class="form-label">Parcelas</label>
                 <input type="text" @keyup="viewSimulateInstallmentsAmount" v-model="data.transaction.amount_installments" class="form-control" :disabled="data.selectStates.installmentDisable" id="parcelas" placeholder="Parcelas">
               </div>
-              <div class="col-md-2" v-if="!data.disableInstallment">
+              <div  class="col-md-2" v-if="!isEdit">
                 <label for="valor_parcela" class="form-label">Valor parcela</label>
                 <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.simulateInstallment" disabled class="form-control"></CurrencyInput>
               </div>
@@ -186,7 +187,7 @@
 
 <script>
 
-import {onMounted, reactive, watch} from "vue";
+import {computed, onMounted, reactive, watch} from "vue";
 import PageTitle from "@/components/page_title/pagetile.vue";
 import {useRoute, useRouter} from "vue-router";
 import {
@@ -205,24 +206,27 @@ import {formatDateAndHour} from "@/services/utils/date";
 import Modal from "@/components/modal/modal.vue";
 import {alertConfirm} from "@/helper/alertHelper";
 import {
+  formatEmptyValue,
+  formatParceladoLabel,
   navigateTransactionPages,
   renderTransactionPageTitle,
   searchTransactionFilter, validateFormAndSubmit
 } from "@/services/view/transactions/transactionviewservice";
 import {
+  checkAndUncheckTransaction,
   deleteTransaction,
-  getAccountTransactions,
-  getTransactionStatisticAccountPeriod, saveTransaction
+  getAccountTransactions, getTransactionById,
+  getTransactionStatisticAccountPeriod, saveTransaction, updateTransaction
 } from "@/services/api/transactionService";
 import CurrencyInput from "@/components/CurrencyInput.vue";
 import {listTransactionType} from "@/services/api/TransactionTypeService";
 import {listTransactionCategories} from "@/services/api/TransactionCategoriesService";
+import NoContent from "@/components/nocontent/NoContent.vue";
 
 export default {
-  components: {Modal, MoneyFormat, Badge, Loading, PageTitle, CurrencyInput},
+  components: {NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle, CurrencyInput},
   setup(){
      let route = useRoute();
-     let router = useRouter();
      let data = reactive({
           modal:{
               title:"Nova Transação",
@@ -253,7 +257,6 @@ export default {
           },
        transactionTypes: [],
        transactionCategories: [],
-       disableInstallment:false,
        inputLabels: [
           "Descrição", "Nome Fatura", "Data" , "Tipo", "Valor", "Categoria", "Quantidade"
        ],
@@ -275,7 +278,7 @@ export default {
           amount_installments: 0,
           related_installments: []
         },
-        transactions: null
+        transactions: []
       });
 
      const viewOpenCloseFilter = () => {
@@ -326,14 +329,14 @@ export default {
             if(data.modal.operation === "new") {
               saveTransaction(data, route)
             }else{
-              updateAccount(data, route)
+              updateTransaction(data, route)
             }
         })
     }
 
     const viewOpenModalEditForm = (id, description) => {
        data.transactionId = id
-       getAccountById(data, route)
+       getTransactionById(data, route)
        data.modal.show = true
        data.modal.operation = "edit"
        data.modal.title = `Editar - ${description}`
@@ -355,8 +358,22 @@ export default {
        data.simulateInstallment  =data.transaction.amount/ data.transaction.amount_installments
     }
 
-    //COMPUTED OR WATCHERS
+    let viewCheckedTransaction = (transactionId, event) => {
+      data.transactionId = transactionId
+      data.transactions = data.transactions.map((transaction) => {
+        if(transaction.id === transactionId) {
+          transaction.checked = event.target.checked
+          return transaction
+        }
+        return transaction
+      })
+      checkAndUncheckTransaction(data, route,  event.target.checked)
+    }
 
+    //COMPUTED OR WATCHERS
+    const isEdit = computed(() => {
+         return data.modal.operation === "edit"
+    });
     watch(() => data.transactions , (transactions) => {
       if(data.pagination.current_page > 1 && transactions.length === 0) {
         data.pagination.current_page -= 1
@@ -406,7 +423,11 @@ export default {
         viewDeleteAccountConfirmation: viewDeleteTransactionConfirmation,
         viewOpenModalEditForm,
         viewSimulateInstallmentsAmount,
-        formatDateAndHour
+        isEdit,
+        formatDateAndHour,
+        formatParceladoLabel,
+        viewCheckedTransaction,
+        formatEmptyValue
       }
   }
 }
