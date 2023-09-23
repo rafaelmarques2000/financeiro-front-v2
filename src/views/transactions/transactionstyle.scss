@@ -7,3 +7,35 @@
 .checked-row{
     background: #f6c4dc !important;
 }
+
+.installment-table{
+    margin-left: 5px;
+}
+
+.installment-table-input-size{
+    width: 200px;
+}
+
+
+@include media-breakpoint-between(sd, md) {
+
+    .installment-table-body tr{
+        margin-bottom: 15px;
+        display: block;
+        border: solid 1px #ccc;
+    }
+
+
+    .installment-table-body tr td{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .installment-table-body tr td:before{
+        content: attr(data-title);
+        position: absolute;
+        display: block;
+        left: 45px;
+        font-weight: 600;
+    }
+}

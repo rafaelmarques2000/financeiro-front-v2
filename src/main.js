@@ -7,7 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import "./assets/general.scss"
 
-
 /* import the fontawesome core */
 import {library} from '@fortawesome/fontawesome-svg-core'
 

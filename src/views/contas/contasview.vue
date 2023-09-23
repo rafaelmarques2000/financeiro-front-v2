@@ -66,7 +66,7 @@
        </div>
      </div>
 
-     <table class="table table-striped page-table">
+     <table class="table table-striped page-table table-hover">
           <thead class="page-table-header">
              <tr>
                  <td>Descrição</td>

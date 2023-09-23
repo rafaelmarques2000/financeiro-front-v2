@@ -4,7 +4,7 @@
           <page-title page-subtitle="Escolha um modulo para continuar" page-title="Seja bem-vindo, Admin"></page-title>
           <div class="row row-cols-2">
               <div class="col-md-2 col-margin" v-for="item in moduleList">
-                   <div class="card module-card" @click="openModule(item.url)">
+                   <div class="card module-card" @click="openModule(item.url, item.standalone)">
                         <div class="card-body flex-column d-flex align-items-center justify-content-center">
                           <font-awesome-icon class="module-icon" :icon="item.icon" />
                           <span class="module-name">{{item.title}}</span>
@@ -28,33 +28,45 @@
                {
                   title: "Dashboard",
                   icon: "fa-solid fa-chart-line",
-                  url: "dashboard"
+                  url: "dashboard",
+                  standalone: true
                },
                {
                  title: "Contas",
                  icon: "fa-solid fa-receipt",
                  url:"contas",
+                 standalone: false
                },
                {
                  title: "Cartões",
                  icon: "fa-solid fa-credit-card",
-                 url:"cartoes"
+                 url:"cartoes",
+                 standalone: false
                },
                {
                  title: "Caixa",
                  icon: "fa-solid fa-money-bill",
-                 url: "caixa"
+                 url: "caixa",
+                 standalone: false
                },
                {
                  title: "Cofrinhos",
                  icon: "fa-solid fa-piggy-bank",
-                 url: "cofrinho"
+                 url: "goals_module",
+                 standalone: true
                }
            ]
 
          let router = useRouter()
 
-         const openModule = (url) => {
+         const openModule = (url, standalone) => {
+             if(standalone){
+                router.push({
+                    name: url
+                })
+                return
+             }
+
             router.push(
                 {
                   name: "conta_module",

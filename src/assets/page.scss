@@ -47,6 +47,10 @@
   position: relative;
 }
 
+.page-table-body tr{
+  cursor: pointer;
+}
+
 .page-table .table-actions button{
   margin-right: 10px;
 }

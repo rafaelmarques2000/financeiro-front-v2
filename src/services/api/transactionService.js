@@ -34,6 +34,9 @@ const getTransactionStatisticAccountPeriod = (data, route) => {
          data.transaction.amount = result.data.amount < 0 ? (result.data.amount * -1) : result.data.amount
          data.transaction.installment_description = result.data.installment_description
          data.isInstallment = result.data.installment
+         data.transaction.related_installments = result.data.related_installments.filter((item) => {
+             return item.current_installment !== result.data.current_installment
+         })
      }).catch(error => {
          data.loading.show = false
          alertError("Atenção","Falha ao obter dados da transação");
@@ -75,6 +78,7 @@ function clearAndUpdateList(data, route) {
     data.simulateInstallment = null
     data.transaction.installment_description = null
     data.modal.show = false
+    data.transaction.related_installments = []
     getAccountTransactions(data, route)
     getTransactionStatisticAccountPeriod(data, route)
 }
@@ -113,6 +117,11 @@ const updateTransaction = (data, route) => {
     delete transaction['installment']
     delete transaction['amount_installments']
     transaction.amount = getMoneyValue(transaction.amount)
+
+    transaction.related_installments = transaction.related_installments.map((item) => {
+        item.amount = getMoneyValue(item.amount)
+        return item;
+    })
 
     httpService.put(`/users/${userId}/accounts/${accountId}/transactions/${data.transactionId}`, transaction).then(result => {
         data.loading.show = false

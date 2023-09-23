@@ -66,8 +66,8 @@
        </div>
      </div>
 
-     <no-content v-if="data.transactions.length === 0" message="Não há registros"></no-content>
-     <table v-else class="table table-striped page-table">
+     <no-content v-if="!isRegisters" message="Não há registros, Efetue uma busca ou adicione um novo registro"></no-content>
+     <table v-else class="table table-striped page-table table-hover">
           <thead class="page-table-header">
              <tr>
                  <td>Descrição</td>
@@ -86,7 +86,7 @@
           <tbody class="page-table-body">
              <tr v-for="item in data.transactions">
                 <td data-title="Descrição" :class="{'checked-row': item.checked}">{{item.description}}</td>
-                <td data-title="Nome fatura" :class="{'checked-row': item.checked}">{{item.installment_description}}</td>
+                <td data-title="Nome fatura" :class="{'checked-row': item.checked}">{{formatEmptyValue(item.installment_description)}}</td>
                 <td data-title="Data" :class="{'checked-row': item.checked}">{{item.date}}</td>
                 <td data-title="Tipo" :class="{'checked-row': item.checked}">{{item.transaction_type.description}}</td>
                 <td data-title="Categoria" :class="{'checked-row': item.checked}">{{item.category.description}}</td>
@@ -106,7 +106,7 @@
           </tbody>
      </table>
 
-     <div class="row">
+     <div class="row" v-if="isRegisters">
        <div class="col-12">
          <nav aria-label="Page navigation example">
            <ul class="pagination">
@@ -149,20 +149,24 @@
                   </select>
                 </div>
 
-                <div class="col-6">
-                  <label for="valor" class="form-label">Valor</label>
-                  <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.transaction.amount" class="form-control"></CurrencyInput>
+                <div class="col-md-6">
+                  <label for="categoria" class="form-label">Categoria</label>
+                  <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">
+                    <option value="">Selecione uma categoria</option>
+                    <option v-for="item in data.transactionCategories" :value="item.id">{{item.description}}</option>
+                  </select>
                 </div>
+
+
               </div>
 
             <div  class="row row-cols-2 transaction-form-rows">
-              <div class="col-md-6">
-                <label for="categoria" class="form-label">Categoria</label>
-                <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">
-                  <option value="">Selecione uma categoria</option>
-                  <option v-for="item in data.transactionCategories" :value="item.id">{{item.description}}</option>
-                </select>
+
+              <div class="col-6">
+                <label for="valor" class="form-label">Valor</label>
+                <currency-input class="form-control" v-model="data.transaction.amount" :options="data.moneyInputConfig"></currency-input>
               </div>
+
               <div class="col-md-3" v-if="!isEdit">
                 <label for="categoria" class="form-label">Parcelamento ?</label>
                 <select class="form-select" v-model="data.transaction.installment">
@@ -180,6 +184,30 @@
               </div>
             </div>
 
+            <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
+
+              <table class="table table-striped installment-table">
+                <thead class="page-table-header">
+                  <tr>
+                    <td>Descrição</td>
+                    <td>Nome na fatura</td>
+                    <td>Competência</td>
+                    <td>Numero Parcela</td>
+                    <td>Valor</td>
+                  </tr>
+                </thead>
+               <tbody class="installment-table-body">
+                  <tr v-for="item in data.transaction.related_installments" class="page-table-row">
+                    <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>
+                    <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>
+                    <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
+                    <td data-title="Numero Parcela">{{ item.current_installment }}</td>
+                    <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
+                  </tr>
+               </tbody>
+              </table>
+            </div>
+
             </div>
      </modal>
    </div>
@@ -195,10 +223,6 @@ import {
   setInitialDateFilter,
 } from "@/services/view/contas/contasviewservice";
 import Loading from "@/components/loading/loading.vue";
-import {
-  getAccountById,
-  saveAccount, updateAccount
-} from "@/services/api/accountService";
 import Badge from "@/components/badge/badge.vue";
 import MoneyFormat from "@/components/money/moneyformat.vue";
 import {generatePagesArray} from "@/services/utils/Pagination";
@@ -218,13 +242,13 @@ import {
   getAccountTransactions, getTransactionById,
   getTransactionStatisticAccountPeriod, saveTransaction, updateTransaction
 } from "@/services/api/transactionService";
-import CurrencyInput from "@/components/CurrencyInput.vue";
 import {listTransactionType} from "@/services/api/TransactionTypeService";
 import {listTransactionCategories} from "@/services/api/TransactionCategoriesService";
 import NoContent from "@/components/nocontent/NoContent.vue";
+import CurrencyInput from "@/components/CurrencyInput.vue";
 
 export default {
-  components: {NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle, CurrencyInput},
+  components: {CurrencyInput, NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle},
   setup(){
      let route = useRoute();
      let data = reactive({
@@ -258,7 +282,7 @@ export default {
        transactionTypes: [],
        transactionCategories: [],
        inputLabels: [
-          "Descrição", "Nome Fatura", "Data" , "Tipo", "Valor", "Categoria", "Quantidade"
+          "Descrição", "Nome Fatura", "Data" , "Tipo", "Categoria", "Valor", "Quantidade"
        ],
        selectStates: {
          categoryDisable: true,
@@ -278,7 +302,13 @@ export default {
           amount_installments: 0,
           related_installments: []
         },
-        transactions: []
+        transactions: [],
+        moneyInputConfig: {
+              currency:'BRL',
+              locale:'pt-BR',
+              precision: 2,
+              autoDecimalDigits: true
+          }
       });
 
      const viewOpenCloseFilter = () => {
@@ -374,6 +404,11 @@ export default {
     const isEdit = computed(() => {
          return data.modal.operation === "edit"
     });
+
+    const isRegisters = computed(() => {
+      return data.transactions.length > 0
+    });
+
     watch(() => data.transactions , (transactions) => {
       if(data.pagination.current_page > 1 && transactions.length === 0) {
         data.pagination.current_page -= 1
@@ -424,6 +459,7 @@ export default {
         viewOpenModalEditForm,
         viewSimulateInstallmentsAmount,
         isEdit,
+        isRegisters,
         formatDateAndHour,
         formatParceladoLabel,
         viewCheckedTransaction,

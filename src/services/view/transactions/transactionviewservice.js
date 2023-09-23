@@ -39,7 +39,6 @@ const navigateTransactionPages = (data, route, direction) => {
 
 const validateFormAndSubmit = (data, callback) => {
     let properties = Object.getOwnPropertyNames(data.transaction);
-    console.log(properties)
     for(let i=0; i<properties.length; i++) {
 
         if(properties[i] === "installment_description") {
@@ -47,6 +46,7 @@ const validateFormAndSubmit = (data, callback) => {
         }
 
         if(data.transaction[properties[i]] === "" || data.transaction[properties[i]] == null) {
+            console.log(`VALOR i: ${i}`)
             console.log(`ERROR: ${properties[i]}`)
             alertError("Atenção",`Preencha o campo ${data.inputLabels[i]}`)
             return;
