@@ -28,7 +28,7 @@
                {
                   title: "Dashboard",
                   icon: "fa-solid fa-chart-line",
-                  url: "dashboard",
+                  url: "dashboard_module",
                   standalone: true
                },
                {

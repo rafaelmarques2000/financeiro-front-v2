@@ -1,9 +1,9 @@
-import Swal from "sweetalert2";
 import Store from "@/store";
 import HttpService from "@/services/http/HttpService";
 import {alertError, alertSuccess} from "@/helper/alertHelper";
 import {getMoneyValue} from "@/services/utils/helpers";
 import httpService from "@/services/http/HttpService";
+import {aportesData} from "@/services/view/goal/goalviewaportes";
 
 const findAll = (data) => {
     data.loading.show = true;
@@ -27,23 +27,32 @@ const findAll = (data) => {
     })
 }
 
-const findById = (data) => {
+const findById = (data, isAportes) => {
     data.loading.show = true
     let userId = Store.getters.userData.user_id
-    let url = `/users/${userId}/goals/${data.goal.id}`
+    let url = ""
+    if(isAportes){
+        url = `/users/${userId}/goals/${aportesData.goalId}`;
+    }else{
+        url = `/users/${userId}/goals/${data.goal.id}`
+    }
 
     HttpService.get(url).then(result => {
 
         data.loading.show = false
-        data.goal.description = result.data.description
-        data.goal.amount = result.data.amount
-        data.goalId = result.data.id
 
+        if(!isAportes) {
+            data.goal.description = result.data.description
+            data.goal.amount = result.data.amount
+        }
+
+        data.goalId = result.data.id
         data.goalBalance.goalContributions = result.data.balance.goal_contributions
         data.goalBalance.goalRemaining = result.data.balance.goal_remaining
         data.goalBalance.percentage = result.data.balance.percentage
     }).catch(error => {
         data.loading.show = false
+        console.log(error)
         alertError("Atenção","Falha ao obter dados");
     })
 }

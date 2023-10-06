@@ -1,10 +1,13 @@
-import {reactive} from "vue";
-import {findAllGoalContributions, saveGoalContribution} from "@/services/api/goalContribuitionService";
+import {computed, reactive} from "vue";
+import {findAllGoalContributions, saveGoalContribution, deleteGoalContribution} from "@/services/api/goalContribuitionService";
 import {generatePagesArray, paginateArray} from "@/services/utils/Pagination";
-import {alertError} from "@/helper/alertHelper";
+import {alertConfirm, alertError} from "@/helper/alertHelper";
 import {findAll} from "@/services/api/goalService";
 
 const aportesData = reactive({
+     loading: {
+       show: false
+     },
      modal: {
          show: false,
          title: "test"
@@ -13,6 +16,7 @@ const aportesData = reactive({
     goalContributions:[],
     goalContributionsPaginated:[],
     goalContribution: {
+        id: "",
         description: "",
         amount: "",
         operation_type: ""
@@ -25,7 +29,7 @@ const aportesData = reactive({
     },
     goalContributionsPagination: {
         currentPage: 0,
-        limit: 10,
+        limit: 5,
         pages:[]
     }
 })
@@ -110,6 +114,17 @@ let submitGoalContribution = (goalId) => {
     saveGoalContribution(aportesData)
 }
 
+const ViewDeleteGoalContribution = (goalContributionId, description) => {
+    alertConfirm("Atenção", `Deseja deletar ${description}?`, () =>{
+        aportesData.goalContribution.id = goalContributionId
+        deleteGoalContribution(aportesData)
+    })
+}
+
+const isGoalContributionsData = computed(() => {
+      return aportesData.goalContributions.length > 0
+})
+
 
 export {
     aportesData,
@@ -117,5 +132,7 @@ export {
     navigatePagesAportes,
     linkNavigationPageArray,
     closeModal,
-    submitGoalContribution
+    submitGoalContribution,
+    ViewDeleteGoalContribution,
+    isGoalContributionsData
 }

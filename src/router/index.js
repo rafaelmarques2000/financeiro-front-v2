@@ -5,6 +5,7 @@ import Modules from "@/views/module_select/moduleselectview.vue";
 import Contas from "@/views/contas/contasview.vue";
 import Transactions from "@/views/transactions/transactionview.vue";
 import Goals from "@/views/goals/goalsview.vue";
+import Dashboard from "@/views/dashboard/dashboardview.vue"
 import store from "@/store";
 import {checkValidToken} from "@/services/api/authService";
 
@@ -39,7 +40,13 @@ const routes = [
          path: '/app/modules/cofrinhos',
          name: 'goals_module',
          component: Goals
-       }
+       },
+
+         {
+             path: '/app/modules/dashboard',
+             name: 'dashboard_module',
+             component: Dashboard
+         }
      ]
   }
 ]

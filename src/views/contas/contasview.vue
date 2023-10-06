@@ -104,7 +104,7 @@
          </nav>
        </div>
      </div>
-     <modal v-if="data.modal.show" @close-modal="viewCloseModal" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
+     <modal v-if="data.modal.show" :show-close-button="true" :show-action-buttons="true" @close-modal="viewCloseModal" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
           <div class="container-fluid">
               <div class="row">
                   <div class="col-md-12">

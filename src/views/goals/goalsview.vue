@@ -96,7 +96,7 @@
         </modal>
 
 
-        <modal v-if="aportesData.modal.show" @close-modal="viewCloseAporteModal" @save-data="" :title="aportesData.modal.title">
+        <modal v-if="aportesData.modal.show" :show-action-buttons="false" :show-close-button="true" @close-modal="viewCloseAporteModal" :title="aportesData.modal.title">
             <div class="alert alert-info">
               <div class="row row-cols-2">
                 <div class="col-md-3">
@@ -129,7 +129,7 @@
             </div>
             <div class="col-md-4">
               <label class="form-label">Valor</label>
-              <CurrencyInput class="form-control" v-model="aportesData.goalContribution.amount" :options="{ currency: 'BRL', precision: 2, autoDecimalDigits: true}"></CurrencyInput>
+              <CurrencyInput class="form-control" v-model="aportesData.goalContribution.amount" :options="data.moneyInputConfig"></CurrencyInput>
             </div>
             <div class="col-md-2">
               <label class="form-label">Tipo:</label>
@@ -158,7 +158,7 @@
                 <td data-title="Valor">
                   <money-format :value="item.amount"></money-format>
                 </td>
-                <td><button type="button" @click="deleteGoalContributionPrompt(item.description, item.id)" class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button></td>
+                <td><button type="button" @click="ViewDeleteGoalContribution(item.id, item.description)" class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button></td>
               </tr>
             </tbody>
           </table>
@@ -179,7 +179,7 @@
           </div>
 
         </modal>
-
+        <loading message="Processando aguarde..." v-if="aportesData.loading.show"></loading>
 
       </div>
 </template>
@@ -197,23 +197,15 @@
      import {generatePagesArray} from "@/services/utils/Pagination";
      import NoContent from "@/components/nocontent/NoContent.vue";
      import {
-       aportesData, closeModal,
+       aportesData, closeModal, isGoalContributionsData,
        linkNavigationPageArray,
        navigatePagesAportes,
-       openAportesModal, submitGoalContribution
+       openAportesModal, submitGoalContribution, ViewDeleteGoalContribution
      } from "@/services/view/goal/goalviewaportes";
      import MoneyFormat from "@/components/money/moneyformat.vue";
 
      export default {
          name: "goals",
-       computed: {
-         aportesData() {
-           return aportesData
-         }
-       },
-         methods: {
-           submitGoalContribution,
-           closeModal, linkNavigationPageArray, navigatePagesAportes, openAportesModal, formatMoneyBRL},
          components: {MoneyFormat, NoContent, CurrencyInput, Modal, Loading, PageTitle},
          setup() {
               const data = reactive({
@@ -249,24 +241,7 @@
                        amount: 0
                     },
                     goals:[],
-                    goalContributions:[],
-                    goalContributionsPaginated:[],
-                    goalContribution: {
-                      description: "",
-                      amount: "",
-                      operation_type: ""
-                    },
-                    goalBalance: {
-                      meta: 0,
-                      goalContributions: 0,
-                      goalRemaining: 0,
-                      percentage: 0,
-                    },
-                    goalContributionsPagination: {
-                      currentPage: 0,
-                      limit: 10,
-                      pages:[]
-                    },
+
                     moneyInputConfig: {
                       currency:'BRL',
                       locale:'pt-BR',
@@ -367,7 +342,15 @@
                 viewChangePageByPageNumber,
                 viewSearchFilter,
                 viewCloseAporteModal,
-                isData
+                ViewDeleteGoalContribution,
+                submitGoalContribution,
+                closeModal,
+                linkNavigationPageArray,
+                navigatePagesAportes,
+                openAportesModal,
+                formatMoneyBRL,
+                isData,
+                aportesData
            }
          }
      }

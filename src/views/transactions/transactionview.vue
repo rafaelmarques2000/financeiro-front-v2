@@ -120,7 +120,7 @@
          </nav>
        </div>
      </div>
-     <modal v-if="data.modal.show" @close-modal="viewCloseModal" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
+     <modal v-if="data.modal.show" @close-modal="viewCloseModal" :show-action-buttons="true" :show-close-button="true" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
           <div class="container-fluid">
 
             <div class="row row-cols-1 transaction-form-rows">

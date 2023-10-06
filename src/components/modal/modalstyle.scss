@@ -27,6 +27,29 @@
 .app-modal-header{
     border-bottom: solid 1px #ccc;
     padding: 10px;
+    display: flex;
+}
+
+.app-modal-header h3{
+  width: 100%;
+}
+
+.modal-btn-actions {
+   display: flex;
+   justify-content: flex-end;
+}
+
+.modal-btn-close{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.modal-btn-close:hover{
+   background: #ff92c6;
+  color:#fff;
 }
 
 .app-modal-header h3 {
