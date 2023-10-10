@@ -19,6 +19,18 @@ const getTransactionStatisticAccountPeriod = (data, route) => {
     })
 }
 
+const getTransactionByCategory = (data) =>{
+    data.loading.show = true;
+    let userId = Store.getters.userData.user_id
+    httpService.get(`/users/${userId}/transactions/${data.categoryId}?initial_date=${formatDate(data.filters.range.start)}&end_date=${formatDate(data.filters.range.end)}&module=${data.filters.module}`).then(result => {
+        data.loading.show = false;
+        data.transactionList = result.data;
+    }).catch(error => {
+        data.loading.show = false;
+        alertError("Atenção","Falha ao obter transações da categoria");
+    })
+}
+
  const getTransactionById = (data, route) => {
 
      let userId = Store.getters.userData.user_id
@@ -176,5 +188,6 @@ export {
     saveTransaction,
     updateTransaction,
     checkAndUncheckTransaction,
-    getTransactionById
+    getTransactionById,
+    getTransactionByCategory
 }

@@ -1,3 +1,5 @@
+@import "../../assets/page";
+
 .expense-chart-content{
   position: relative;
   height: 75vh;
@@ -11,4 +13,37 @@
 
 .dash-expense-filter select{
    width: 200px;
+}
+
+.pie-graph-card {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.dash-filter{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.pie-chart-content{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@include media-breakpoint-between(sd, md) {
+   .pie-graph-card{
+      width: 100%;
+   }
+
+   .period-filter-content{
+     margin-top: 15px;
+   }
+
 }
