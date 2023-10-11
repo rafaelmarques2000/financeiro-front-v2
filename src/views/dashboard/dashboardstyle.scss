@@ -37,9 +37,27 @@
   text-overflow: ellipsis;
 }
 
+.ranking-title{
+   font-size: 1em;
+}
+
+.categories-progress {
+   margin-bottom: 13px;
+}
+
+.dashboard-card-header{
+    background: #d24c87;
+    color: #fff;
+}
+
+.categories-container {
+    height: 500px;
+    overflow: auto;
+}
+
 @include media-breakpoint-between(sd, md) {
-   .pie-graph-card{
-      width: 100%;
+  .pie-graph-card{
+      width: 95%;
    }
 
    .period-filter-content{

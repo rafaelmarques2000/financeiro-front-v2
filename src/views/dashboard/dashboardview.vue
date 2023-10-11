@@ -21,10 +21,35 @@
             </div>
 
           <no-content v-if="!data.dashboard.expense.length" message="Não há dados para mostrar"></no-content>
+          <div class="container-fluid expense-chart-content">
+            <div class="row row-cols-1">
+               <div class="col-md-6">
+                 <div class="card">
+                   <div class="card-header dashboard-card-header">
+                     <h4>Gasto anual</h4>
+                   </div>
+                   <div class="card-body">
+                     <canvas id="expenseChart" height="220"></canvas>
+                   </div>
+                 </div>
+               </div>
 
-            <div class="container-fluid expense-chart-content">
-               <canvas id="expenseChart" height="100"></canvas>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header dashboard-card-header">
+                    <h4>Curva de gastos</h4>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="spending-curve" height="220"></canvas>
+                  </div>
+                </div>
+              </div>
+
+
+
+
             </div>
+          </div>
         </div>
 
         <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
@@ -71,8 +96,8 @@
 
             <div class="row row-cols-1">
                  <div class="col-md-6">
-                   <div class="card pie-graph-card">
-                      <div class="card-header">
+                   <div class="card pie-graph-card ">
+                      <div class="card-header dashboard-card-header">
                           <h3>Gastos por categoria</h3>
                       </div>
                       <div class="card-body">
@@ -85,16 +110,18 @@
                  </div>
                  <div class="col-md-6">
                      <div class="card pie-graph-card">
-                         <div class="card-header">
+                         <div class="card-header dashboard-card-header">
                            <h3>Ranking de gastos</h3>
                          </div>
                          <div class="card-body">
                            <no-content message="Não há dados no período" style="position: relative; top: 50%" v-if="!data.dashboard.expensePerCategory.length"></no-content>
-                           <div v-else v-for="item in data.dashboard.expensePerCategory" class="categories-progress">
-                             <h4>{{item.description}} - {{ formatMoneyBRL(item.amount) }} <a href="" @click.prevent="viewOpenModalRanking(item.description, item.id, item.amount)" class="chart-ranking-details-btn" ><font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" /></a> </h4>
-                             <div class="progress" style="height: 20px;">
-                               <div class="progress-bar bar-animate" role="progressbar" :style="`width: ${item.percentage}%; background:${getChartColor(item.description)}`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                             </div>
+                           <div v-else class="categories-container" >
+                               <div v-for="item in data.dashboard.expensePerCategory" class="categories-progress">
+                                 <h4 class="ranking-title">{{item.description}} - {{ formatMoneyBRL(item.amount) }} <a href="" @click.prevent="viewOpenModalRanking(item.description, item.id, item.amount)" class="chart-ranking-details-btn" ><font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" /></a> </h4>
+                                 <div class="progress" style="height: 20px;">
+                                   <div class="progress-bar bar-animate" role="progressbar" :style="`width: ${item.percentage}%; background:${getChartColor(item.description)}`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                 </div>
+                               </div>
                            </div>
 
                          </div>

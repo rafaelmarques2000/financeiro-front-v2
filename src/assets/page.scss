@@ -87,6 +87,7 @@
   .page-table-body tr td{
     display: block;
     text-align: right;
+    word-break: break-all;
   }
 
   .page-table-body tr td:before{

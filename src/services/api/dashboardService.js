@@ -27,8 +27,10 @@ const getInvoiceReport = async (data) => {
         if(!data.dashboard.expense.length){
             data.loading.show = false;
             destroyChart("expenseChart")
+            destroyChart("spending-curve")
             return
         }
+        destroyChart("spending-curve");
         destroyChart("expenseChart");
 
         let chart = new Chart(
@@ -55,16 +57,14 @@ const getInvoiceReport = async (data) => {
                         datalabels:{
                             anchor: 'end',
                             align: 'top',
+                            padding: {
+                                top: -10
+                            },
                             formatter: function(value, context) {
                                 return formatMoneyBRL(value);
                             }
                         }
                     }
-                },
-                layout:{
-                  padding:{
-                      top: 200
-                  }
                 },
                 data: {
                     labels: data.dashboard.expense.map(row => row.month),
@@ -82,13 +82,67 @@ const getInvoiceReport = async (data) => {
                 }
             }
         );
+
+
+        let chartLine = new Chart(
+            document.getElementById('spending-curve'),
+            {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                type: 'line',
+                plugins:[ChartDataLabels],
+                options:{
+                    plugins: {
+                        legend:{
+                            display: true,
+                            position: "bottom"
+                        },
+                        tooltip:{
+                            enabled: false
+                        },
+                        datalabels:{
+                            anchor: 'end',
+                            align: 'top',
+                            padding: {
+                                top: -10
+                            },
+                            formatter: function(value, context) {
+                                return formatMoneyBRL(value);
+                            }
+                        }
+                    }
+                },
+                layout:{
+                    padding:{
+                        top: 200
+                    }
+                },
+                data: {
+                    labels: data.dashboard.expense.map(row => row.month),
+                    datasets: [
+                        {
+                            label: "Curva de gastos",
+                            data: data.dashboard.expense.map(row => row.amount),
+                        }
+                    ]
+                }
+            }
+        );
+
         data.loading.show = false;
 
     }catch (e) {
+        console.log(e)
         data.loading.show = false;
         alertError("Atenção","Falha ao obter dados do dashboard");
     }
 }
+
 
 const getExpensePerCategory = async (data) => {
     try{
@@ -110,7 +164,6 @@ const getExpensePerCategory = async (data) => {
             {
                 type: "pie",
                 responsive: true,
-                plugins:[ChartDataLabels],
                 options:{
                     plugins: {
                         legend:{
@@ -123,16 +176,6 @@ const getExpensePerCategory = async (data) => {
                                 label: function (context) {
                                      return parseFloat(context.raw).toFixed(2) + "%"
                                 }
-                            }
-                        },
-                        datalabels:{
-                            textAlign: 'center',
-                            font: {
-                                size: 14
-                            },
-                            position: 'default',
-                            formatter: function(value, context) {
-                                return value.toFixed(2) + '%';
                             }
                         }
                     }
