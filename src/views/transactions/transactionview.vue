@@ -185,27 +185,28 @@
             </div>
 
             <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
-
-              <table class="table table-striped installment-table">
-                <thead class="page-table-header">
-                  <tr>
-                    <td>Descrição</td>
-                    <td>Nome na fatura</td>
-                    <td>Competência</td>
-                    <td>Numero Parcela</td>
-                    <td>Valor</td>
-                  </tr>
-                </thead>
-               <tbody class="installment-table-body">
-                  <tr v-for="item in data.transaction.related_installments" class="page-table-row">
-                    <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>
-                    <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>
-                    <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
-                    <td data-title="Numero Parcela">{{ item.current_installment }}</td>
-                    <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
-                  </tr>
-               </tbody>
-              </table>
+              <div class="col-md-12">
+                  <table class="table table-striped installment-table">
+                    <thead class="page-table-header">
+                      <tr>
+                        <td>Descrição</td>
+                        <td>Nome na fatura</td>
+                        <td>Competência</td>
+                        <td>Numero Parcela</td>
+                        <td>Valor</td>
+                      </tr>
+                    </thead>
+                   <tbody class="installment-table-body">
+                      <tr v-for="item in data.transaction.related_installments" class="page-table-row">
+                        <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>
+                        <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>
+                        <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
+                        <td data-title="Numero Parcela">{{ item.current_installment }}</td>
+                        <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
+                      </tr>
+                   </tbody>
+                  </table>
+              </div>
             </div>
 
             </div>

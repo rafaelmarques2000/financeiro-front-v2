@@ -2,15 +2,11 @@
    <div class="app-modal-backdrop ">
       <div class="app-modal-content container-fluid">
            <div class="app-modal-header">
-               <div class="row row-cols-2 w-100">
-                   <div class="col-md-6">
-                     <h3><font-awesome-icon :icon="$props.icon"></font-awesome-icon> {{$props.title}}</h3>
-                   </div>
 
-                   <div v-if="$props.showCloseButton" class="col-md-6 d-flex align-items-md-end justify-content-end">
-                       <button class="modal-btn-close" @click="viewCancel" type="button">X</button>
-                   </div>
-               </div>
+              <div class="col-md-12 d-flex w-100">
+                <h3 class="modal-title w-100" ><font-awesome-icon :icon="$props.icon"></font-awesome-icon> {{$props.title}}</h3>
+                <button v-if="$props.showCloseButton" style="margin:auto;width: 50px" class="modal-btn-close" @click="viewCancel" type="button">X</button>
+              </div>
            </div>
 
           <div class="app-modal-body">

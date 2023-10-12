@@ -129,6 +129,7 @@
       </div>
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
       <modal v-if="data.chartRankingModal.show" :title="data.chartRankingModal.title" @close-modal="data.chartRankingModal.show = false" :show-action-buttons="false" :show-close-button="true">
+          <div class="modal-table-content" style="width: 100%">
             <table class="table table-striped">
               <thead class="page-table-header">
               <tr class="page-table-header">
@@ -154,6 +155,7 @@
               </tr>
               </tbody>
             </table>
+          </div>
       </modal>
 
     </div>
