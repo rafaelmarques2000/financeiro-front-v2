@@ -52,7 +52,7 @@
         <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
 
             <div class="container-fluid dash-filter">
-                <div class="row row-cols-1">
+                <div class="row row-cols-1 d-flex justify-content-end align-items-md-end">
                     <div class="col-md-3">
                         <label>Modulo</label>
                         <select v-model="data.filters.module" class="form-select">

@@ -82,7 +82,7 @@
         </div>
 
 
-        <modal v-if="data.modal.show" @close-modal="viewCloseModal" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
+        <modal v-if="data.modal.show" @close-modal="viewCloseModal" :show-action-buttons="true" :show-close-button="true" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
               <div class="row row-cols-1">
                   <div class="col-md-6">
                      <label for="description" class="form-label">Descrição</label>
@@ -241,6 +241,12 @@
                        amount: 0
                     },
                     goals:[],
+                    goalBalance: {
+                      meta: 0,
+                      goalContributions: 0,
+                      goalRemaining: 0,
+                      percentage: 0,
+                    },
 
                     moneyInputConfig: {
                       currency:'BRL',
