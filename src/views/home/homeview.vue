@@ -20,6 +20,7 @@
               <li><router-link to="/app/modules/cartoes" class="nav-link dropdown-item" aria-current="page">Cartões</router-link></li>
               <li><router-link to="/app/modules/caixa" class="nav-link dropdown-item" aria-current="page">Caixa</router-link></li>
               <li><router-link to="/app/modules/cofrinhos" class="nav-link dropdown-item" aria-current="page">Cofrinhos</router-link></li>
+              <li><router-link to="/app/modules/transaction-history" class="nav-link dropdown-item" aria-current="page">Historico Transações</router-link></li>
             </ul>
           </li>
           <li class="nav-item">

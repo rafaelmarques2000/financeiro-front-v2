@@ -54,7 +54,13 @@
                  icon: "fa-solid fa-piggy-bank",
                  url: "goals_module",
                  standalone: true
-               }
+               },
+             {
+               title: "Historico Transações",
+               icon: "fa-solid fa-clock",
+               url: "transaction_history",
+               standalone: true
+             }
            ]
 
          let router = useRouter()
