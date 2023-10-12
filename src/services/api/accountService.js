@@ -112,6 +112,18 @@ const getAccountPeriodGeneralStatistic = (data, route) => {
     })
 }
 
+const getUserAccounts = (data) => {
+    let userId = Store.getters.userData.user_id
+    let url = `/users/${userId}/user-accounts`
+    data.loading.show = true;
+    httpService.get(url).then(result => {
+        data.loading.show = false;
+        data.accounts = result.data
+    }).catch(error => {
+        alertError("Atenção", error.response.data.message)
+    })
+}
+
 
 function buildUrl(userId,uri, data, module) {
     let url = `/users/${userId}/${uri}?limit=${data.pagination.limit}&page=${data.pagination.current_page}`
@@ -142,5 +154,6 @@ export {
     deleteAccount,
     updateAccount,
     getAccountByIdPromisse,
-    getAccountPeriodGeneralStatistic
+    getAccountPeriodGeneralStatistic,
+    getUserAccounts
 }

@@ -44,7 +44,6 @@ const getInvoiceReport = async (data) => {
                 responsive: true,
                 maintainAspectRatio: false,
                 type: 'bar',
-                plugins:[ChartDataLabels],
                 options:{
                     plugins: {
                         legend:{
@@ -52,16 +51,11 @@ const getInvoiceReport = async (data) => {
                            position: "bottom"
                         },
                         tooltip:{
-                            enabled: false
-                        },
-                        datalabels:{
-                            anchor: 'end',
-                            align: 'top',
-                            padding: {
-                                top: -10
-                            },
-                            formatter: function(value, context) {
-                                return formatMoneyBRL(value);
+                            enabled: true,
+                            callbacks: {
+                                label: function (context) {
+                                    return formatMoneyBRL(context.raw);
+                                }
                             }
                         }
                     }
@@ -72,10 +66,10 @@ const getInvoiceReport = async (data) => {
                         {
                             label: "Gastos Mensais",
                             data: data.dashboard.expense.map(row => row.amount),
-                            backgroundColor: [ // Cores para cada barra
-                                'rgba(255, 99, 132, 0.5)', // Cor para a Barra 1
-                                'rgba(54, 162, 235, 0.5)', // Cor para a Barra 2
-                                'rgba(255, 206, 86, 0.5)' // Cor para a Barra 3
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)'
                             ],
                         }
                     ]
@@ -95,7 +89,6 @@ const getInvoiceReport = async (data) => {
                 responsive: true,
                 maintainAspectRatio: false,
                 type: 'line',
-                plugins:[ChartDataLabels],
                 options:{
                     plugins: {
                         legend:{
@@ -103,16 +96,11 @@ const getInvoiceReport = async (data) => {
                             position: "bottom"
                         },
                         tooltip:{
-                            enabled: false
-                        },
-                        datalabels:{
-                            anchor: 'end',
-                            align: 'top',
-                            padding: {
-                                top: -10
-                            },
-                            formatter: function(value, context) {
-                                return formatMoneyBRL(value);
+                            enabled: true,
+                            callbacks: {
+                                label: function (context) {
+                                    return formatMoneyBRL(context.raw);
+                                }
                             }
                         }
                     }
@@ -137,7 +125,6 @@ const getInvoiceReport = async (data) => {
         data.loading.show = false;
 
     }catch (e) {
-        console.log(e)
         data.loading.show = false;
         alertError("Atenção","Falha ao obter dados do dashboard");
     }
@@ -164,6 +151,7 @@ const getExpensePerCategory = async (data) => {
             {
                 type: "pie",
                 responsive: true,
+                maintainAspectRatio: false,
                 options:{
                     plugins: {
                         legend:{

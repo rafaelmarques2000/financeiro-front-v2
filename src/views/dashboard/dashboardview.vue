@@ -23,30 +23,27 @@
           <no-content v-if="!data.dashboard.expense.length" message="Não há dados para mostrar"></no-content>
           <div class="container-fluid expense-chart-content">
             <div class="row row-cols-1">
-               <div class="col-md-6">
+               <div class="col-md-6 dashboard-columns">
                  <div class="card">
                    <div class="card-header dashboard-card-header">
                      <h4>Gasto anual</h4>
                    </div>
                    <div class="card-body">
-                     <canvas id="expenseChart" height="220"></canvas>
+                     <canvas id="expenseChart" height="180"></canvas>
                    </div>
                  </div>
                </div>
 
-              <div class="col-md-6">
+              <div class="col-md-6 dashboard-columns">
                 <div class="card">
                   <div class="card-header dashboard-card-header">
                     <h4>Curva de gastos</h4>
                   </div>
                   <div class="card-body">
-                    <canvas id="spending-curve" height="220"></canvas>
+                    <canvas id="spending-curve" height="180"></canvas>
                   </div>
                 </div>
               </div>
-
-
-
 
             </div>
           </div>
@@ -103,7 +100,7 @@
                       <div class="card-body">
                         <no-content v-if="!data.dashboard.expensePerCategory.length" message="Não há dados para mostrar"></no-content>
                         <div class="pie-chart-content">
-                            <canvas id="expense-per-category"></canvas>
+                            <canvas id="expense-per-category" height="300"></canvas>
                         </div>
                       </div>
                    </div>
@@ -132,31 +129,31 @@
       </div>
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
       <modal v-if="data.chartRankingModal.show" :title="data.chartRankingModal.title" @close-modal="data.chartRankingModal.show = false" :show-action-buttons="false" :show-close-button="true">
-        <table class="table table-striped">
-          <thead class="page-table-header">
-          <tr class="page-table-header">
-            <td>Data</td>
-            <td>Conta origem</td>
-            <td>Descrição</td>
-            <td>Parcelado</td>
-            <td>Qtd Parcelas</td>
-            <td>Numero Parcela</td>
-            <td>Valor</td>
-          </tr>
-          </thead>
+            <table class="table table-striped">
+              <thead class="page-table-header">
+              <tr class="page-table-header">
+                <td>Data</td>
+                <td>Conta origem</td>
+                <td>Descrição</td>
+                <td>Parcelado</td>
+                <td>Qtd Parcelas</td>
+                <td>Numero Parcela</td>
+                <td>Valor</td>
+              </tr>
+              </thead>
 
-          <tbody class="page-table-body">
-          <tr v-for="item in data.transactionList">
-            <td data-title="Data">{{item.date}}</td>
-            <td data-title="Conta origem" class="nowrap">{{item.account.description}}</td>
-            <td data-title="Descrição" class="nowrap">{{item.description}}</td>
-            <td data-title="Parcelado">{{item.installment ? "Sim":"Não"}}</td>
-            <td data-title="Qtd Parcelas">{{item.amount_installment}}</td>
-            <td data-title="Numero Parcela">{{item.current_installment}}</td>
-            <td data-title="Valor">{{formatMoneyBRL(item.amount)}}</td>
-          </tr>
-          </tbody>
-        </table>
+              <tbody class="page-table-body">
+              <tr v-for="item in data.transactionList">
+                <td data-title="Data">{{item.date}}</td>
+                <td data-title="Conta origem" class="nowrap">{{item.account.description}}</td>
+                <td data-title="Descrição" class="nowrap">{{item.description}}</td>
+                <td data-title="Parcelado">{{item.installment ? "Sim":"Não"}}</td>
+                <td data-title="Qtd Parcelas">{{item.amount_installment}}</td>
+                <td data-title="Numero Parcela">{{item.current_installment}}</td>
+                <td data-title="Valor">{{formatMoneyBRL(item.amount)}}</td>
+              </tr>
+              </tbody>
+            </table>
       </modal>
 
     </div>

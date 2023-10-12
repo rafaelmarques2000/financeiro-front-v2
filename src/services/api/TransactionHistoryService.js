@@ -13,8 +13,8 @@ const listAllTransactionHistory = (data) => {
         url = url.concat(`&description=${data.filter.description}`)
     }
 
-    if(data.filter.accountType != null && data.filter.accountType !== "" ) {
-        url = url.concat(`&account_type=${data.filter.accountType}`)
+    if(data.filter.accountId != null && data.filter.accountId !== "" ) {
+        url = url.concat(`&account_id=${data.filter.accountId}`)
     }
 
     httpService.get(url).then(result => {

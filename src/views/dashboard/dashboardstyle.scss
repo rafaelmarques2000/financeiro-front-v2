@@ -55,13 +55,22 @@
     overflow: auto;
 }
 
+
 @include media-breakpoint-between(sd, md) {
   .pie-graph-card{
       width: 95%;
    }
 
+  .pie-chart-content{
+    width: 100%
+  }
+
    .period-filter-content{
      margin-top: 15px;
    }
+
+  .dashboard-columns{
+     margin-bottom: 20px;
+  }
 
 }

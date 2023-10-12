@@ -25,10 +25,10 @@
 
          <div class="col-md-3">
            <div class="type-account-filter" style="padding-top: 8px">
-             <label>Tipo de conta</label>
-             <select v-model="data.filter.accountType" class="form-select">
-                 <option value="">Selecione um tipo</option>
-                 <option :value="item.slug_name" v-for="item in data.accountTypes">{{item.description}}</option>
+             <label>Conta</label>
+             <select v-model="data.filter.accountId" class="form-select">
+                 <option value="">Selecione uma conta</option>
+                 <option :value="item.id" v-for="item in data.accounts">{{item.description}}</option>
              </select>
            </div>
          </div>
@@ -89,7 +89,7 @@
              <td data-title="Nome fatura" >{{formatEmptyValue(item.installment_description)}}</td>
              <td data-title="Data">{{item.date}}</td>
              <td data-title="Data Criação">{{item.created_at}}</td>
-             <td data-title="Tipo"><span class="badge badge-primary">{{item.transaction_type.description}}</span></td>
+             <td data-title="Tipo"><span>{{item.transaction_type.description}}</span></td>
              <td data-title="Categoria">{{item.category.description}}</td>
              <td data-title="Valor"><money-format :value="item.amount"></money-format> </td>
              <td data-title="Parcelado">{{formatParceladoLabel(item.installment)}}</td>
@@ -133,6 +133,7 @@
     import {setInitialDateFilter} from "@/services/view/contas/contasviewservice";
     import Loading from "@/components/loading/loading.vue";
     import {listAccountTypes} from "@/services/api/accountTypeService";
+    import {getUserAccounts} from "@/services/api/accountService";
 
     export default {
       methods: {formatParceladoLabel, formatEmptyValue},
@@ -143,11 +144,12 @@
                show : false
              },
              accountTypes:[],
+             accounts:[],
              filter: {
                open: true,
                description: "",
                range: "",
-               accountType:""
+               accountId:""
              },
              pagination: {
                pages: [],
@@ -204,6 +206,7 @@
             setInitialDateFilter(data)
             listAllTransactionHistory(data)
             listAccountTypes(data)
+            getUserAccounts(data)
           })
 
            return {
@@ -211,8 +214,7 @@
              isRegisters,
              viewListNavigation,
              viewChangePageByPageNumber,
-             viewSearchFilter
-
+             viewSearchFilter,
            }
         }
     }
