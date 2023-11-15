@@ -5,8 +5,6 @@ import store from "@/store";
 
 const validateAndLogin = (data, router) => {
 
-
-
      if(data.username === ""){
          data.alert.show = true;
          data.alert.message = "Preencha o campo usuário"
@@ -23,16 +21,19 @@ const validateAndLogin = (data, router) => {
 
     data.showLoading = true;
 
-
     authenticate(data).then(response =>{
+        console.log(response.data)
         data.showLoading = false;
         store.commit("enableAuth")
         store.commit("setUserData", response.data)
         router.push({name: "app"})
     }).catch(error => {
       try {
-          alertError("Atencão", error.message)
+          console.log(error)
+          data.showLoading = false;
+          alertError("Atencão", error.response.data.message)
       }catch (ex) {
+          data.showLoading = false;
           alertError("Atencão", ex.message)
       }
     })

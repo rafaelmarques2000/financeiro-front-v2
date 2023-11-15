@@ -9,7 +9,7 @@
                           </div>
                           <alert v-if="data.alert.show"  :message="data.alert.message" alert-type="danger"></alert>
                           <loading v-if="data.showLoading" message="processando aguarde..."></loading>
-                            <form @submit.prevent="formSubmit">
+                            <form>
                                 <div class="mb-4">
                                     <input type="text" v-model="data.username" placeholder="Digite seu usuário" class="form-control login-input">
                                 </div>
@@ -19,7 +19,7 @@
                               </div>
 
                               <div class="mb-3">
-                                  <button type="submit" class="btn btn-dark w-100 login-btn">Entrar</button>
+                                  <button type="button" @click="formSubmit" class="btn btn-dark w-100 login-btn">Entrar</button>
                               </div>
                             </form>
                         </div>

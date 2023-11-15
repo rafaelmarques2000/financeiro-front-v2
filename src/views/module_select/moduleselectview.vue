@@ -20,6 +20,7 @@
 <script>
     import {useRouter} from "vue-router";
     import PageTitle from "@/components/page_title/pagetile.vue";
+    import HttpService from "@/services/http/HttpService";
 
     export default {
       components: {PageTitle},
