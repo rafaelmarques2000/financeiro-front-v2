@@ -35,7 +35,8 @@ export default createStore({
   state: {
       isAuth: false,
       userData: {},
-      showWelcomeTitle: false
+      showWelcomeTitle: false,
+      dateFilter: null
   },
   getters: {
      isAuth(state) {
@@ -46,6 +47,9 @@ export default createStore({
      },
      isWelcomeTitle(state) {
          return state.showWelcomeTitle
+     },
+     dateRange(state){
+         return state.dateFilter
      }
   },
   mutations: {
@@ -61,6 +65,7 @@ export default createStore({
       clearState(state) {
         state.isAuth = false
         state.userData = {}
+        state.dateFilter = null
      },
       showWelcomeTitle(state) {
           state.showWelcomeTitle = true
@@ -68,6 +73,9 @@ export default createStore({
       hiddenWelcomeTitle(state) {
           state.showWelcomeTitle = false
       },
+      setDateFilter(state, dateRage){
+          state.dateFilter = dateRage
+      }
   },
   plugins: [vuexLocal.plugin]
 })

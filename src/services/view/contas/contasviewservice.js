@@ -1,5 +1,6 @@
 import {accountlistAll, getAccountPeriodGeneralStatistic} from "@/services/api/accountService";
 import {alertConfirm, alertError} from "@/helper/alertHelper";
+import store from "@/store";
 
 const renderPageTitle = (data, route) => {
     let module = route.params.module
@@ -63,6 +64,10 @@ const openCloseFilter = (data) => {
 
 const setInitialDateFilter = (data) => {
     const now = new Date();
+    if(store.getters.dateRange != null) {
+        data.filter.range = store.getters.dateRange
+        return
+    }
     data.filter.range = {
         start: new Date(now.getFullYear(), now.getMonth(), 1),
         end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
@@ -92,6 +97,7 @@ const searchFilter = (data, route) => {
         alertError("Atenção", "Preencha o filtro de data com inicio e fim para continuar")
         return;
     }
+    store.commit("setDateFilter", data.filter.range)
     getAccountPeriodGeneralStatistic(data, route)
     accountlistAll(data, route)
 }

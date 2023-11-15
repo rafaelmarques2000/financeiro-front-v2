@@ -1,6 +1,7 @@
 import {accountlistAll, getAccountById, getAccountByIdPromisse} from "@/services/api/accountService";
 import {alertError} from "@/helper/alertHelper";
 import {getAccountTransactions, getTransactionStatisticAccountPeriod} from "@/services/api/transactionService";
+import store from "@/store";
 
 const renderTransactionPageTitle = (data, route) => {
     getAccountByIdPromisse(route.params.id).then(result => {
@@ -15,6 +16,7 @@ const searchTransactionFilter = (data, route) => {
         alertError("Atenção", "Preencha o filtro de data com inicio e fim para continuar")
         return;
     }
+    store.commit("setDateFilter", data.filter.range)
     getTransactionStatisticAccountPeriod(data, route)
     getAccountTransactions(data, route)
 }
