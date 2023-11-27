@@ -48,8 +48,6 @@ const validateFormAndSubmit = (data, callback) => {
         }
 
         if(data.transaction[properties[i]] === "" || data.transaction[properties[i]] == null) {
-            console.log(`VALOR i: ${i}`)
-            console.log(`ERROR: ${properties[i]}`)
             alertError("Atenção",`Preencha o campo ${data.inputLabels[i]}`)
             return;
         }

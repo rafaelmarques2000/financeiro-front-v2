@@ -20,7 +20,6 @@
 <script>
     import {useRouter} from "vue-router";
     import PageTitle from "@/components/page_title/pagetile.vue";
-    import HttpService from "@/services/http/HttpService";
 
     export default {
       components: {PageTitle},
@@ -56,6 +55,12 @@
                  url: "goals_module",
                  standalone: true
                },
+             {
+               title: "Listas",
+               icon: "fa-solid fa-list",
+               url:"lists",
+               standalone: true
+             },
              {
                title: "Historico Transações",
                icon: "fa-solid fa-clock",
