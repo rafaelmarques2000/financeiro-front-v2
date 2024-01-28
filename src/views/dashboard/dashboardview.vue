@@ -206,12 +206,12 @@
 
          const generateSelectYears = () => {
              let currentYear = new Date().getFullYear()
-             const yearsToShow = 5;
-
-             // Loop para gerar a lista de anos
-             for (let i = currentYear; i <= currentYear + yearsToShow; i++) {
-                  data.years.push(i)
+             let initialYear = 2022;
+            
+             for(let i=initialYear;i <= currentYear;i++){
+               data.years.push(i)
              }
+
              data.filters.year = currentYear
          }
 
