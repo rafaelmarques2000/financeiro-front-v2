@@ -196,7 +196,17 @@ const getExpensePerCategory = async (data) => {
     }
 }
 
+const getAnualExpense = async (data) => { 
+        data.loading.show = true;
+        let userId = Store.getters.userData.user_id
+        let url = `/users/${userId}/dashboard/anual-expense-report`
+        let request = await httpService.get(url)
+        data.dashboard.anualExpense = request.data
+}
+
+
 export {
     getInvoiceReport,
-    getExpensePerCategory
+    getExpensePerCategory,
+    getAnualExpense
 }

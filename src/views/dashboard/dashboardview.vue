@@ -8,6 +8,10 @@
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Balanço mensal</a>
         </li>
+
+         <li class="nav-item" role="presentation">
+          <a class="nav-link" id="tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab2" aria-selected="false">Totais</a>
+        </li>
       </ul>
 
       <div class="tab-content" id="myTabsContent">
@@ -126,6 +130,38 @@
                  </div>
             </div>
         </div>
+
+        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+              <div class="col-md-12">
+                <div class="card" style="margin-top: 15px;">
+                      <div class="card-header dashboard-card-header">
+                          <h3>Total Anual de gastos</h3>
+                      </div>
+                      <div class="card-body">
+                        <no-content v-if="!data.dashboard.anualExpense.length" message="Não há dados para mostrar"></no-content>
+                        <table class="table table-striped">
+                       <thead class="page-table-header">
+                          <tr class="page-table-header">
+                              <td>Ano</td>
+                              <td>Receita</td>
+                              <td>Despesa</td>
+                              <td>Total</td>
+                          </tr>
+                       </thead>
+                       <tbody class="page-table-body">
+                          <tr v-for="item in data.dashboard.anualExpense">
+                            <td data-title="Ano">{{item.year}}</td>
+                            <td data-title="Receita"><money-format :value="item.positive"></money-format></td>
+                            <td data-title="Despesa"><money-format :value="(item.negative * -1)"></money-format></td>
+                            <td data-title="Total"><money-format :value="item.total"></money-format></td>
+                          </tr>  
+                        </tbody>
+                       </table> 
+                      </div>
+                   </div>
+              </div>
+        </div>    
+
       </div>
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
       <modal v-if="data.chartRankingModal.show" :title="data.chartRankingModal.title" @close-modal="data.chartRankingModal.show = false" :show-action-buttons="false" :show-close-button="true">
@@ -163,8 +199,9 @@
 
 <script >
    import PageTitle from "@/components/page_title/pagetile.vue";
+   import MoneyFormat from "@/components/money/moneyformat.vue";
    import {onMounted, reactive} from "vue";
-   import {getExpensePerCategory, getInvoiceReport} from "@/services/api/dashboardService";
+   import {getExpensePerCategory, getInvoiceReport, getAnualExpense} from "@/services/api/dashboardService";
    import NoContent from "@/components/nocontent/NoContent.vue";
    import {listAccountTypes} from "@/services/api/accountTypeService";
    import Loading from "@/components/loading/loading.vue";
@@ -174,7 +211,7 @@
    export default {
        name : "dashboard",
      methods: {formatMoneyBRL},
-     components: {Modal, Loading, NoContent, PageTitle},
+     components: {Modal, Loading, NoContent, PageTitle, MoneyFormat},
        setup(){
 
          const data = reactive({
@@ -192,7 +229,8 @@
               },
               dashboard:{
                   expense: [],
-                  expensePerCategory:[]
+                  expensePerCategory:[],
+                  anualExpense: []
               },
              chartRankingModal: {
                show: false,
@@ -250,6 +288,7 @@
             generateSelectYears()
             getInvoiceReport(data)
             getExpensePerCategory(data)
+            getAnualExpense(data)
             listAccountTypes(data)
           })
 
