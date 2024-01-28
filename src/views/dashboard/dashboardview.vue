@@ -145,7 +145,7 @@
                               <td>Ano</td>
                               <td>Receita</td>
                               <td>Despesa</td>
-                              <td>Total</td>
+                              <td>Saldo</td>
                           </tr>
                        </thead>
                        <tbody class="page-table-body">
