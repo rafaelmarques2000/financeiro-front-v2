@@ -115,7 +115,7 @@ const getInvoiceReport = async (data) => {
                     datasets: [
                         {
                             label: "Curva de gastos",
-                            data: data.dashboard.expense.map(row => row.amount),
+                            data: data.dashboard.expense.map(row => row.expense),
                         }
                     ]
                 }
