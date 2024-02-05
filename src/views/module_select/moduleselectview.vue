@@ -57,6 +57,12 @@
                  standalone: true
                },
              {
+               title: "Lista de desejos",
+               icon: "fa-solid fa-heart",
+               url: "wishlist",
+               standalone: true
+             },
+             {
                title: "Historico Transações",
                icon: "fa-solid fa-clock",
                url: "transaction_history",
