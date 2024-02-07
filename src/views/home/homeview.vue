@@ -15,12 +15,13 @@
               <font-awesome-icon icon="fa-solid fa-list"></font-awesome-icon> Modulos
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><router-link to="/app/modules/dashboard" class="nav-link dropdown-item" aria-current="page">Dashboard</router-link></li>
-              <li><router-link to="/app/modules/contas" class="nav-link dropdown-item" aria-current="page">Contas</router-link></li>
-              <li><router-link to="/app/modules/cartoes" class="nav-link dropdown-item" aria-current="page">Cartões</router-link></li>
-              <li><router-link to="/app/modules/caixa" class="nav-link dropdown-item" aria-current="page">Caixa</router-link></li>
-              <li><router-link to="/app/modules/cofrinhos" class="nav-link dropdown-item" aria-current="page">Cofrinhos</router-link></li>
-              <li><router-link to="/app/modules/transaction-history" class="nav-link dropdown-item" aria-current="page">Historico Transações</router-link></li>
+              <li><router-link to="/app/modules/dashboard" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-chart-line" /> Dashboard</router-link></li>
+              <li><router-link to="/app/modules/contas" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-receipt" /> Contas</router-link></li>
+              <li><router-link to="/app/modules/cartoes" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-credit-card" /> Cartões</router-link></li>
+              <li><router-link to="/app/modules/caixa" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-money-bill" /> Caixa</router-link></li>
+              <li><router-link to="/app/modules/cofrinhos" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-piggy-bank" /> Cofrinhos</router-link></li>
+              <li><router-link to="/app/modules/wishlist" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-heart" /> Lista de desejos</router-link></li>
+              <li><router-link to="/app/modules/transaction-history" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-clock" /> Historico Transações</router-link></li>
             </ul>
           </li>
           <li class="nav-item">
