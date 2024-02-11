@@ -46,7 +46,10 @@
       <tr  v-for="item in data.wishlistsItems">
         <td :class="{'checked-row': item.checked}"  data-title="Descrição">{{item.description}}</td>
         <td :class="{'checked-row': item.checked}"  data-title="Valor"><money-format :value="item.amount"></money-format></td>
-        <td :class="{'checked-row': item.checked}" data-title="Link"><a :href="item.link" target="_blank">Site do produto</a></td>
+        <td :class="{'checked-row': item.checked}" data-title="Link">
+          <a v-if="isValidLink(item.link)" :href="item.link" target="_blank">Site do produto</a>
+          <span v-else> - </span>
+        </td>
         <td :class="{'checked-row': item.checked}"  data-title="Comprado"><input type="checkbox" @change="viewCheckedItem(item,$event)" :checked="item.checked"/></td>
         <td :class="{'checked-row': item.checked}"  data-title="Criado em">{{formatDateAndHour(item.created_at)}}</td>
         <td :class="{'checked-row': item.checked}">
@@ -268,6 +271,11 @@ import {checkAndUncheckTransaction} from "@/services/api/transactionService";
          updateWishListItem(data, false)
        }
 
+       const isValidLink = (link) => {
+         const urlPattern = /^(https?|ftp|http):\/\/([a-zA-Z0-9.-]+)(\.[a-zA-Z]{2,})(:\d+)?(\/\S*)?$/;
+         return urlPattern.test(link)
+       }
+
        //WATCHERS
        watch(() => data.wishlistsItems , (wishlistsItems) => {
          if(data.pagination.current_page > 1 && wishlistsItems.length === 0) {
@@ -283,7 +291,7 @@ import {checkAndUncheckTransaction} from "@/services/api/transactionService";
        })
 
        return {
-          data,
+         data,
          openCloseFilter,
          openWishListModal,
          closeWishListModal,
@@ -292,7 +300,8 @@ import {checkAndUncheckTransaction} from "@/services/api/transactionService";
          navigatePages,
          removeWishList,
          openEditModal,
-         viewCheckedItem
+         viewCheckedItem,
+         isValidLink
         }
      }
   }
