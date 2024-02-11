@@ -201,8 +201,6 @@ import {checkAndUncheckTransaction} from "@/services/api/transactionService";
 
        const createWishList = () => {
 
-         const urlPattern = /^(https?|ftp|http):\/\/([a-zA-Z0-9.-]+)(\.[a-zA-Z]{2,})(:\d+)?(\/\S*)?$/;
-
          if(data.wishlistItem.description === "") {
            alertError("Atenção", "Preencha o campo descrição")
            return;
@@ -211,11 +209,6 @@ import {checkAndUncheckTransaction} from "@/services/api/transactionService";
          if(data.wishlistItem.amount === 0 || data.wishlistItem.amount === "" || data.wishlistItem.amount === null) {
            alertError("Atenção", "Preencha o campo Valor")
            return;
-         }
-
-         if(!urlPattern.test(data.wishlistItem.link)) {
-           alertError("Atenção", "Preencha o campo link com uma url valida")
-           return
          }
 
          if(data.modals.wishlistItem.operation === "new") {
