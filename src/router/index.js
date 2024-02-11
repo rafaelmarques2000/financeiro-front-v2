@@ -10,6 +10,7 @@ import TransactionHistory from "@/views/transaction_history/transactionhistoryvi
 import store from "@/store";
 import {checkValidToken} from "@/services/api/authService";
 import Wishlistview from "@/views/wishlist/wishlistview.vue";
+import WishlistItemsview from "@/views/wishlist/wishlistItemsview.vue";
 
 const routes = [
   {
@@ -58,6 +59,11 @@ const routes = [
              path: '/app/modules/wishlist',
              name: 'wishlist',
              component: Wishlistview
+         },
+         {
+             path: '/app/modules/wishlist/:id/items',
+             name: 'wishlist-items',
+             component: WishlistItemsview
          }
      ]
   }

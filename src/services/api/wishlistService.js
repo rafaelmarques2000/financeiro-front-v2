@@ -91,6 +91,7 @@ const deleteWishList = (data) => {
             }
         })
     }).catch(error => {
+        data.loading.show = false
         alertError("Atenção", "Falha ao deletar lista de desejos, tente novamente ou contate o adminstrador.")
     })
 }

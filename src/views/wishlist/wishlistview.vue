@@ -30,7 +30,9 @@
         </div>
       </div>
 
-      <table class="table table-striped page-table table-hover">
+      <no-content v-if="!data.wishlists.length" message="Não há lista de desejos cadastradas"></no-content>
+
+      <table  v-if="data.wishlists.length" class="table table-striped page-table table-hover">
         <thead class="page-table-header">
         <tr>
           <td>Descrição</td>
@@ -41,9 +43,9 @@
         </thead>
         <tbody class="page-table-body">
            <tr v-for="item in data.wishlists">
-              <td data-title="Descrição">{{item.description}}</td>
-              <td data-title="Status">{{item.status}}</td>
-              <td data-title="Criado em">{{formatDateAndHour(item.created_at)}}</td>
+              <td @click.self="viewItemList(item.id)" data-title="Descrição">{{item.description}}</td>
+              <td @click.self="viewItemList(item.id)" data-title="Status">{{item.status}}</td>
+              <td @click.self="viewItemList(item.id)" data-title="Criado em">{{formatDateAndHour(item.created_at)}}</td>
               <td>
                 <div class="table-actions d-flex">
                   <button type="button" @click="openEditModal(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
@@ -55,7 +57,7 @@
 
       </table>
 
-      <div class="col-12">
+      <div  v-if="data.wishlists.length" class="col-12">
         <nav aria-label="Page navigation example">
           <ul class="pagination">
             <li class="page-item"><a @click.prevent="navigatePages('prev')" class="page-link" href="#">Anterior</a></li>
@@ -105,11 +107,14 @@ import Loading from "@/components/loading/loading.vue";
 import Modal from "@/components/modal/modal.vue";
 import {alertConfirm, alertError} from "@/helper/alertHelper";
 import {generatePagesArray} from "@/services/utils/Pagination";
+import NoContent from "@/components/nocontent/NoContent.vue";
+import {useRouter} from "vue-router";
 
 export default {
   methods: {formatDateAndHour},
-  components: {Modal, Loading, PageTitle},
+  components: {NoContent, Modal, Loading, PageTitle},
   setup() {
+    let router = useRouter();
     let data = reactive({
           wishlist: {
              id: "",
@@ -223,6 +228,10 @@ export default {
         data.modals.wishlist.show = true
     }
 
+    const viewItemList = (id) => {
+        router.push({name: "wishlist-items", params: {id}})
+    }
+
     //WATCHERS
     watch(() => data.wishlists , (wishlists) => {
       if(data.pagination.current_page > 1 && wishlists.length === 0) {
@@ -245,7 +254,8 @@ export default {
         createWishList,
         navigatePages,
         removeWishList,
-        openEditModal
+        openEditModal,
+        viewItemList
     }
   }
 }
