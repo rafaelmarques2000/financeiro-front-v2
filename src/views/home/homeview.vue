@@ -24,6 +24,15 @@
               <li><router-link to="/app/modules/transaction-history" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-clock" /> Historico Transações</router-link></li>
             </ul>
           </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <font-awesome-icon icon="fa-solid fa-gear"></font-awesome-icon> Configurações
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><router-link to="/app/modules/config/categories" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-list" /> Categorias</router-link></li>
+            </ul>
+          </li>
           <li class="nav-item">
             <a class="nav-link" @click.prevent="viewLogout" aria-current="page" href="#"><font-awesome-icon icon="fa-solid fa-right-from-bracket"></font-awesome-icon> Sair</a>
           </li>
