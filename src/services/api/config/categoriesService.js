@@ -28,7 +28,7 @@ const getCategoryById = (data) => {
         data.loading.show = false
         data.category.id = result.data.id
         data.category.description = result.data.description
-        data.category_type_id = result.data.category_type.id
+        data.category.category_type_id = result.data.category_type.id
     }).catch(error => {
         data.loading.show = false
         alertError("Atenção", "Falha ao obter categoria, tente novamente ou contate o administrador")
@@ -64,7 +64,7 @@ const updateCategory = (data) => {
 
     httpService.put(`/categories/${data.category.id}`, data.category).then(result => {
         data.loading.show = false
-        alertSuccess("sucesso!!", "Lista de desejo atualizada com sucesso").then(alertResult => {
+        alertSuccess("sucesso!!", "Categoria atualizada com sucesso").then(alertResult => {
             listAllCategories(data)
             data.modals.category.show = false
             data.category.id = ""
