@@ -97,6 +97,22 @@ const deleteAccount = (data, route) => {
     })
 }
 
+const archiveAccount = (data, route) => {
+    let userId = Store.getters.userData.user_id
+    data.loading.show = true
+    httpService.delete(`/users/${userId}/accounts/${data.account.id}/archive`).then(result => {
+        data.loading.show = false
+        alertSuccess("Sucesso!", "Arquivado com sucesso").then(result => {
+            if(result.isConfirmed){
+                data.account.id = ""
+                accountlistAll(data, route)
+            }
+        })
+    }).catch(error => {
+        alertError("Atenção", "Falha ao arquivar, tente novamente ou contate o adminstrador.")
+    })
+}
+
 
 const getAccountPeriodGeneralStatistic = (data, route) => {
     let userId = Store.getters.userData.user_id
@@ -132,6 +148,10 @@ function buildUrl(userId,uri, data, module) {
         url = url.concat(`&description=${data.filter.description}`)
     }
 
+    if (data.filter.archived != null) {
+        url = url.concat(`&archived=${data.filter.archived}`)
+    }
+
     if (module === "contas") {
         url = url.concat(`&account_types[]=conta_corrente`)
     }
@@ -155,5 +175,6 @@ export {
     updateAccount,
     getAccountByIdPromisse,
     getAccountPeriodGeneralStatistic,
-    getUserAccounts
+    getUserAccounts,
+    archiveAccount
 }

@@ -62,6 +62,9 @@
                <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
                  <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
                </button>
+               <button type="button" @click="showArchives" class="btn btn-primary app-button app-clear-button">
+                 <font-awesome-icon icon="fa-solid fa-box-archive"></font-awesome-icon>
+               </button>
                <button type="button" @click="clearFilters" class="btn btn-primary app-button app-clear-button">
                  <font-awesome-icon icon="fa-solid fa-xmark"></font-awesome-icon>
                </button>
@@ -91,6 +94,7 @@
                    <div class="table-actions d-flex">
                      <button type="button" @click="viewOpenModalEditForm(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
                      <button type="button" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
+                     <button type="button" @click="viewArchiveConfirmation(item.id, item.description)"  class="btn btn-outline-secondary"><font-awesome-icon icon="fa-solid fa-box-archive" /></button>
                    </div>
                 </td>
              </tr>
@@ -138,7 +142,7 @@ import {
 } from "@/services/view/contas/contasviewservice";
 import Loading from "@/components/loading/loading.vue";
 import {
-  accountlistAll,
+  accountlistAll, archiveAccount,
   deleteAccount, getAccountById,
   getAccountPeriodGeneralStatistic,
   saveAccount, updateAccount
@@ -174,7 +178,8 @@ export default {
           filter: {
              open: true,
              description: "",
-             range: ""
+             range: "",
+             archived: 0
           },
           loading: {
              show : false
@@ -251,6 +256,13 @@ export default {
         })
     }
 
+    const viewArchiveConfirmation = (id, description) => {
+      alertConfirm("Confirmação", `Deseja arquivar ${description}?`, () =>{
+        data.account.id = id
+        archiveAccount(data, route)
+      })
+    }
+
     const viewEnterTransaction = (id) => {
         let module = route.params.module
         router.push({name: "transanctions_module", params: {module, id}})
@@ -258,6 +270,7 @@ export default {
 
     const clearFilters = () => {
       data.filter.description = ""
+      data.filter.archived = 0
       const now = new Date();
       data.filter.range = {
         start: new Date(now.getFullYear(), now.getMonth(), 1),
@@ -266,6 +279,12 @@ export default {
       store.commit("setDateFilter", data.filter.range)
       accountlistAll(data, route)
       getAccountPeriodGeneralStatistic(data, route)
+    }
+
+    const showArchives = () => {
+        data.filter.archived = 1
+        accountlistAll(data, route)
+        getAccountPeriodGeneralStatistic(data, route)
     }
 
     //COMPUTED OR WATCHERS
@@ -306,7 +325,9 @@ export default {
         viewEnterTransaction,
         formatDateAndHour,
         totalAmountAccounts,
-        clearFilters
+        clearFilters,
+        viewArchiveConfirmation,
+        showArchives
       }
   }
 }
