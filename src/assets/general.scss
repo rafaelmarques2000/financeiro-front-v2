@@ -1,7 +1,31 @@
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #832150 !important;
+}
+
+*::-webkit-scrollbar-track {
+  background: #d24c87!important;
+}
+
 .app-button {
   background: #d24c87!important;
   border: none!important;
   transition: background .5s;
+}
+
+.app-clear-button {
+  background: #a43367 !important;
+  border: none!important;
+  transition: background .5s;
+  margin-left: 10px!important;
+}
+
+.app-clear-button:hover {
+  background: #731e47 !important;
 }
 
 .app-button:hover{

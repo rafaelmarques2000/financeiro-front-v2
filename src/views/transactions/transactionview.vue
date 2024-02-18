@@ -29,12 +29,24 @@
 
      <div class="filter-body" v-if="data.filter.open">
        <div class="row row-cols-1">
-         <div class="col-md-6">
+         <div class="col-md-4">
            <label class="form-label">Descrição</label>
            <div class="input-group">
              <input type="text" v-model="data.filter.description" class="form-control">
            </div>
          </div>
+
+         <div class="col-md-4">
+           <label class="form-label">Categoria</label>
+           <div class="input-group">
+              <select class="form-select" v-model="data.filter.category">
+                  <option value="">Selecione uma categoria</option>
+                  <option v-for="item in data.filter_categories" :value="item.id">{{item.description}}</option>
+              </select>
+           </div>
+         </div>
+
+
          <div class="col-md-4">
            <label class="form-label">Data</label>
            <div class="calendar-content d-flex">
@@ -58,9 +70,14 @@
                </div>
              </template>
            </v-date-picker>
-           <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
-             <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
-           </button>
+           <div class="filter-actions d-flex">
+               <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
+                 <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
+               </button>
+               <button type="button" @click="clearFilters" class="btn btn-primary app-button app-clear-button">
+                 <font-awesome-icon icon="fa-solid fa-xmark"></font-awesome-icon>
+               </button>
+           </div>
            </div>
          </div>
        </div>
@@ -223,7 +240,7 @@
 
 <script>
 
-import {computed, onMounted, reactive, watch} from "vue";
+import {computed, nextTick, onMounted, reactive, watch} from "vue";
 import PageTitle from "@/components/page_title/pagetile.vue";
 import {useRoute, useRouter} from "vue-router";
 import {
@@ -251,9 +268,10 @@ import {
   getTransactionStatisticAccountPeriod, saveTransaction, updateTransaction
 } from "@/services/api/transactionService";
 import {listTransactionType} from "@/services/api/TransactionTypeService";
-import {listTransactionCategories} from "@/services/api/TransactionCategoriesService";
+import {listTransactionCategories, listTransactionCategoriesExpense} from "@/services/api/TransactionCategoriesService";
 import NoContent from "@/components/nocontent/NoContent.vue";
 import CurrencyInput from "@/components/CurrencyInput.vue";
+import store from "@/store";
 
 export default {
   components: {CurrencyInput, NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle},
@@ -271,10 +289,12 @@ export default {
               subtitle: "",
               icon: ""
           },
+          filter_categories:[],
           filter: {
              open: true,
              description: "",
-             range: ""
+             range: "",
+             category:""
           },
           loading: {
              show : false
@@ -410,6 +430,19 @@ export default {
       checkAndUncheckTransaction(data, route,  event.target.checked)
     }
 
+    const clearFilters = () => {
+       data.filter.description = ""
+       data.filter.category = ""
+       const now = new Date();
+       data.filter.range = {
+        start: new Date(now.getFullYear(), now.getMonth(), 1),
+        end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
+       }
+       store.commit("setDateFilter", data.filter.range)
+       getTransactionStatisticAccountPeriod(data,route)
+       getAccountTransactions(data, route)
+    }
+
     //COMPUTED OR WATCHERS
     const isEdit = computed(() => {
          return data.modal.operation === "edit"
@@ -451,9 +484,10 @@ export default {
          renderTransactionPageTitle(data, route)
          getTransactionStatisticAccountPeriod(data,route)
          getAccountTransactions(data, route)
-         listTransactionType(data)
+         listTransactionType(data, (transaction_type) => {
+              listTransactionCategoriesExpense(data, transaction_type)
+         })
      })
-
 
       return{
         data,
@@ -473,7 +507,8 @@ export default {
         formatDateAndHour,
         formatParceladoLabel,
         viewCheckedTransaction,
-        formatEmptyValue
+        formatEmptyValue,
+        clearFilters
       }
   }
 }

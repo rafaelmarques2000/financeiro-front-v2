@@ -63,8 +63,12 @@ const getAccountTransactions = (data, route) => {
 
     let url = `/users/${userId}/accounts/${accountId}/transactions?limit=${data.pagination.limit}&page=${data.pagination.current_page}&initial_date=${formatDate(data.filter.range.start)}&end_date=${formatDate(data.filter.range.end)}`
 
-    if(data.filter.description != null) {
+    if(data.filter.description != null || data.filter.description === "") {
         url = url.concat(`&description=${data.filter.description}`)
+    }
+
+    if(data.filter.category != null || data.filter.category === "") {
+        url = url.concat(`&category_id=${data.filter.category}`)
     }
 
     httpService.get(url).then(result => {

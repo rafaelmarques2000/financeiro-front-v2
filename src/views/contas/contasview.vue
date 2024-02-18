@@ -58,15 +58,22 @@
                </div>
              </template>
            </v-date-picker>
-           <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
-             <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
-           </button>
+             <div class="filter-actions d-flex">
+               <button type="button" @click="viewSearchFilter" class="btn btn-primary app-button">
+                 <font-awesome-icon icon="fa-solid fa-search"></font-awesome-icon>
+               </button>
+               <button type="button" @click="clearFilters" class="btn btn-primary app-button app-clear-button">
+                 <font-awesome-icon icon="fa-solid fa-xmark"></font-awesome-icon>
+               </button>
+             </div>
            </div>
          </div>
        </div>
      </div>
 
-     <table class="table table-striped page-table table-hover">
+     <no-content v-if="!data.accounts.length" message="Não há dados"></no-content>
+
+     <table v-else class="table table-striped page-table table-hover">
           <thead class="page-table-header">
              <tr>
                  <td>Descrição</td>
@@ -90,7 +97,7 @@
           </tbody>
      </table>
 
-     <div class="row">
+     <div class="row" v-if="data.accounts.length">
        <div class="col-12">
          <nav aria-label="Page navigation example">
            <ul class="pagination">
@@ -143,9 +150,12 @@ import {formatDateAndHour} from "@/services/utils/date";
 import Modal from "@/components/modal/modal.vue";
 import {getAccountType} from "@/services/api/accountTypeService";
 import {alertConfirm} from "@/helper/alertHelper";
+import {getAccountTransactions, getTransactionStatisticAccountPeriod} from "@/services/api/transactionService";
+import store from "@/store";
+import NoContent from "@/components/nocontent/NoContent.vue";
 
 export default {
-  components: {Modal, MoneyFormat, Badge, Loading, PageTitle},
+  components: {NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle},
   setup(){
      let route = useRoute();
      let router = useRouter();
@@ -182,7 +192,7 @@ export default {
               description: "",
               account_type_id: ""
           },
-          accounts: null
+          accounts:[]
       });
 
      const viewOpenCloseFilter = () => {
@@ -246,6 +256,18 @@ export default {
         router.push({name: "transanctions_module", params: {module, id}})
     }
 
+    const clearFilters = () => {
+      data.filter.description = ""
+      const now = new Date();
+      data.filter.range = {
+        start: new Date(now.getFullYear(), now.getMonth(), 1),
+        end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
+      }
+      store.commit("setDateFilter", data.filter.range)
+      accountlistAll(data, route)
+      getAccountPeriodGeneralStatistic(data, route)
+    }
+
     //COMPUTED OR WATCHERS
 
     const totalAmountAccounts = computed(() => {
@@ -283,7 +305,8 @@ export default {
         viewOpenModalEditForm,
         viewEnterTransaction,
         formatDateAndHour,
-        totalAmountAccounts
+        totalAmountAccounts,
+        clearFilters
       }
   }
 }
