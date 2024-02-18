@@ -100,12 +100,15 @@ const deleteAccount = (data, route) => {
 const archiveAccount = (data, route) => {
     let userId = Store.getters.userData.user_id
     data.loading.show = true
-    httpService.delete(`/users/${userId}/accounts/${data.account.id}/archive`).then(result => {
+    let archived = data.account.archived
+    httpService.patch(`/users/${userId}/accounts/${data.account.id}/archive`, {archived}).then(result => {
         data.loading.show = false
-        alertSuccess("Sucesso!", "Arquivado com sucesso").then(result => {
+        alertSuccess("Sucesso!", data.account.archived === 1 ? "Arquivado com sucesso!" : "Desarquivado com sucesso!").then(result => {
             if(result.isConfirmed){
                 data.account.id = ""
+                data.account.archived = 0
                 accountlistAll(data, route)
+                getAccountPeriodGeneralStatistic(data, route)
             }
         })
     }).catch(error => {
@@ -121,7 +124,6 @@ const getAccountPeriodGeneralStatistic = (data, route) => {
     let url = buildUrl(userId, 'accounts/statistics' , data, module);
 
     httpService.get(url).then(result => {
-        Swal.close()
         data.statistics = result.data
     }).catch(error => {
         alertError("Atenção", error.response.data.message)

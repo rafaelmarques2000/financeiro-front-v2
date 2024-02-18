@@ -37,7 +37,7 @@ import {
     faEdit,
     faClock,
     faList,
-    faHeart, faGear, faXmark, faBoxArchive
+    faHeart, faGear, faXmark, faBoxArchive, faBoxOpen
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
@@ -67,7 +67,8 @@ library.add(
     faHeart,
     faGear,
     faXmark,
-    faBoxArchive
+    faBoxArchive,
+    faBoxOpen
 )
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';

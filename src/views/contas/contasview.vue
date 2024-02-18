@@ -14,7 +14,8 @@
 
 
      <div class="page-action">
-       <button class="btn btn-primary app-button" @click="viewOpenModalForm" type="button" ><font-awesome-icon icon="fa-solid fa-circle-plus" /></button>
+       <button class="btn btn-primary app-button" v-if="!data.filter.archived" @click="viewOpenModalForm" type="button" ><font-awesome-icon icon="fa-solid fa-circle-plus" /></button>
+       <button class="btn btn-primary app-button" v-else disabled type="button" ><font-awesome-icon icon="fa-solid fa-circle-plus" /></button>
        <button class="btn btn-secondary app-button" @click="viewOpenCloseFilter" type="button"><font-awesome-icon icon="fa-solid fa-filter" /></button>
        <div class="show-per-page">
          <select class="form-select show-pages" @change="viewChangeLimitPerPage" v-model="data.pagination.limit">
@@ -92,9 +93,10 @@
                 <td @click.self="viewEnterTransaction(item.id)" data-title="Ultima atualização">{{formatDateAndHour(item.updated_at)}}</td>
                 <td>
                    <div class="table-actions d-flex">
-                     <button type="button" @click="viewOpenModalEditForm(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
-                     <button type="button" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
-                     <button type="button" @click="viewArchiveConfirmation(item.id, item.description)"  class="btn btn-outline-secondary"><font-awesome-icon icon="fa-solid fa-box-archive" /></button>
+                     <button type="button" title="Editar" @click="viewOpenModalEditForm(item.id, item.description)"  class="btn btn-primary app-button"><font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
+                     <button type="button" title="Deletar" @click="viewDeleteAccountConfirmation(item.id, item.description)"  class="btn btn-outline-danger"><font-awesome-icon icon="fa-solid fa-trash" /></button>
+                     <button type="button" title="Arquivar" v-if="data.filter.archived === 0" @click="viewArchiveConfirmation(item.id, item.description)"  class="btn btn-outline-secondary"><font-awesome-icon icon="fa-solid fa-box-archive" /></button>
+                     <button type="button" title="Desarquivar" v-else @click="viewUnarchiveConfirmation(item.id, item.description)"  class="btn btn-outline-secondary"><font-awesome-icon icon="fa-solid fa-box-open" /></button>
                    </div>
                 </td>
              </tr>
@@ -195,7 +197,8 @@ export default {
           account:{
               id:"",
               description: "",
-              account_type_id: ""
+              account_type_id: "",
+              archived: 0
           },
           accounts:[]
       });
@@ -259,7 +262,17 @@ export default {
     const viewArchiveConfirmation = (id, description) => {
       alertConfirm("Confirmação", `Deseja arquivar ${description}?`, () =>{
         data.account.id = id
+        data.account.archived = 1
         archiveAccount(data, route)
+        getAccountPeriodGeneralStatistic(data, route)
+      })
+    }
+    const viewUnarchiveConfirmation = (id, description) => {
+      alertConfirm("Confirmação", `Deseja desarquivar ${description}?`, () =>{
+        data.account.id = id
+        data.account.archived = 0
+        archiveAccount(data, route)
+        getAccountPeriodGeneralStatistic(data, route)
       })
     }
 
@@ -271,6 +284,7 @@ export default {
     const clearFilters = () => {
       data.filter.description = ""
       data.filter.archived = 0
+      renderPageTitle(data, route)
       const now = new Date();
       data.filter.range = {
         start: new Date(now.getFullYear(), now.getMonth(), 1),
@@ -283,6 +297,7 @@ export default {
 
     const showArchives = () => {
         data.filter.archived = 1
+        renderPageTitle(data, route)
         accountlistAll(data, route)
         getAccountPeriodGeneralStatistic(data, route)
     }
@@ -327,7 +342,8 @@ export default {
         totalAmountAccounts,
         clearFilters,
         viewArchiveConfirmation,
-        showArchives
+        showArchives,
+        viewUnarchiveConfirmation
       }
   }
 }

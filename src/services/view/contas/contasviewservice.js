@@ -6,26 +6,50 @@ const renderPageTitle = (data, route) => {
     let module = route.params.module
 
     if(module === "contas"){
-        data.pageTitle = {
-            title: "Contas",
-            subtitle: "Gerencie suas contas",
-            icon: "fa-solid fa-receipt"
+        if(data.filter.archived === 1){
+            data.pageTitle = {
+                title: "Contas(arquivadas)",
+                subtitle: "Gerencie suas contas arquivadas",
+                icon: "fa-solid fa-box-archive"
+            }
+        }else {
+            data.pageTitle = {
+                title: "Contas",
+                subtitle: "Gerencie suas contas",
+                icon: "fa-solid fa-receipt"
+            }
         }
     }
 
     if(module === "cartoes"){
-        data.pageTitle = {
-            title: "Cartões",
-            subtitle: "Gerencie seus cartões",
-            icon: "fa-solid fa-credit-card"
+        if(data.filter.archived === 1){
+            data.pageTitle = {
+                title: "Cartões(arquivados)",
+                subtitle: "Gerencie seus cartões arquivados",
+                icon: "fa-solid fa-box-archive"
+            }
+        }else {
+            data.pageTitle = {
+                title: "Cartões",
+                subtitle: "Gerencie seus cartões",
+                icon: "fa-solid fa-credit-card"
+            }
         }
     }
 
     if(module === "caixa"){
-        data.pageTitle = {
-            title: "Caixa",
-            subtitle: "Gerencie seu caixa mensal",
-            icon: "fa-solid fa-money-bill"
+        if(data.filter.archived === 1){
+            data.pageTitle = {
+                title: "Caixa(arquivados)",
+                subtitle: "Gerencie suas contas de caixa arquivados",
+                icon: "fa-solid fa-box-archive"
+            }
+        }else {
+            data.pageTitle = {
+                title: "Caixa",
+                subtitle: "Gerencie seu caixa mensal",
+                icon: "fa-solid fa-money-bill"
+            }
         }
     }
 }
