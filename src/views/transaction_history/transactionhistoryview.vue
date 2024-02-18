@@ -72,6 +72,7 @@
          <td>Descrição</td>
          <td>Nome fatura</td>
          <td>Data</td>
+         <td>Data real</td>
          <td>Data Criação</td>
          <td>Tipo</td>
          <td>Categoria</td>
@@ -88,6 +89,7 @@
              <td data-title="Descrição" >{{item.description}}</td>
              <td data-title="Nome fatura" >{{formatEmptyValue(item.installment_description)}}</td>
              <td data-title="Data">{{item.date}}</td>
+             <td data-title="Data real">{{formatEmptyValue(item.real_date)}}</td>
              <td data-title="Data Criação">{{item.created_at}}</td>
              <td data-title="Tipo"><span>{{item.transaction_type.description}}</span></td>
              <td data-title="Categoria">{{item.category.description}}</td>

@@ -26,11 +26,14 @@
    margin-top: 31px;
 }
 
-@include media-breakpoint-between(sd, md) {
+.row-btn-actions button {
+  width: 100%;
+  margin-right: 10px;
+}
 
+@include media-breakpoint-between(sd, md) {
       .row-btn-actions button {
           width: 100%;
           margin-right: 10px;
       }
-
 }

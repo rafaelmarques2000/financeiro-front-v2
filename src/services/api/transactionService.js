@@ -46,6 +46,7 @@ const getTransactionByCategory = (data) =>{
          data.transaction.amount = result.data.amount < 0 ? (result.data.amount * -1) : result.data.amount
          data.transaction.installment_description = result.data.installment_description
          data.isInstallment = result.data.installment
+         data.transaction.real_date = result.data.real_date == null ? null : result.data.real_date.split("/").reverse().join("-")
          data.transaction.related_installments = result.data.related_installments.filter((item) => {
              return item.current_installment !== result.data.current_installment
          })
@@ -89,6 +90,7 @@ function clearAndUpdateList(data, route) {
     data.transaction.amount_installments = null;
     data.simulateInstallment = null
     data.transaction.installment_description = null
+    data.transaction.real_date = null
     data.modal.show = false
     data.transaction.related_installments = []
     getAccountTransactions(data, route)
@@ -106,6 +108,10 @@ const saveTransaction = (data, route) => {
         delete transaction['amount_installments']
     }
     transaction.amount = getMoneyValue(transaction.amount)
+
+    if(transaction.real_date === "" || transaction.real_date == null) {
+        delete transaction['real_date']
+    }
 
     data.loading.show = true
 
@@ -134,6 +140,10 @@ const updateTransaction = (data, route) => {
         item.amount = getMoneyValue(item.amount)
         return item;
     })
+
+    if(transaction.real_date === "" || transaction.real_date == null) {
+        delete transaction['real_date']
+    }
 
     httpService.put(`/users/${userId}/accounts/${accountId}/transactions/${data.transactionId}`, transaction).then(result => {
         data.loading.show = false

@@ -43,7 +43,7 @@ const validateFormAndSubmit = (data, callback) => {
     let properties = Object.getOwnPropertyNames(data.transaction);
     for(let i=0; i<properties.length; i++) {
 
-        if(properties[i] === "installment_description") {
+        if(properties[i] === "installment_description" || properties[i] === "real_date") {
             continue;
         }
 

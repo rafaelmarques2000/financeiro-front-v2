@@ -73,6 +73,7 @@
                  <td>Descrição</td>
                  <td>Nome fatura</td>
                  <td>Data</td>
+                 <td>Data Real</td>
                  <td>Tipo</td>
                  <td>Categoria</td>
                  <td>Valor</td>
@@ -88,6 +89,7 @@
                 <td data-title="Descrição" :class="{'checked-row': item.checked}">{{item.description}}</td>
                 <td data-title="Nome fatura" :class="{'checked-row': item.checked}">{{formatEmptyValue(item.installment_description)}}</td>
                 <td data-title="Data" :class="{'checked-row': item.checked}">{{item.date}}</td>
+                <td data-title="Data Real" :class="{'checked-row': item.checked}">{{formatEmptyValue(item.real_date)}}</td>
                 <td data-title="Tipo" :class="{'checked-row': item.checked}">{{item.transaction_type.description}}</td>
                 <td data-title="Categoria" :class="{'checked-row': item.checked}">{{item.category.description}}</td>
                 <td data-title="Valor" :class="{'checked-row': item.checked}"><money-format :value="item.amount"></money-format> </td>
@@ -136,12 +138,17 @@
 
                 <div class="col-md-4">
                   <label for="date" class="form-label">Data</label>
-                  <input type="date" v-model="data.transaction.date" class="form-control" id="date" placeholder="Digite um nome para sua conta" aria-describedby="descriptionHelp">
+                  <input type="date" v-model="data.transaction.date" class="form-control" id="date" placeholder="Digite a data da transação" aria-describedby="descriptionHelp">
                 </div>
               </div>
 
-              <div class="row row-cols-2 transaction-form-rows">
-                <div class="col-6">
+              <div class="row row-cols-1 transaction-form-rows">
+                <div class="col-md-4">
+                  <label for="date" class="form-label">Data real</label>
+                  <input type="date" v-model="data.transaction.real_date" class="form-control" id="real_date" placeholder="Digite a data real de compra" aria-describedby="descriptionHelp">
+                </div>
+
+                <div class="col-md-4">
                   <label for="tipo" class="form-label">Tipo</label>
                   <select class="form-select" v-model="data.transaction.transaction_type">
                     <option value="">Selecione um tipo</option>
@@ -149,7 +156,7 @@
                   </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label for="categoria" class="form-label">Categoria</label>
                   <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">
                     <option value="">Selecione uma categoria</option>
@@ -185,8 +192,8 @@
             </div>
 
             <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
-              <div class="col-md-12">
-                  <table class="table table-striped installment-table">
+              <div class="col-md-12 table-responsive">
+                  <table class="table table-striped">
                     <thead class="page-table-header">
                       <tr>
                         <td>Descrição</td>
@@ -301,7 +308,8 @@ export default {
           amount: null,
           installment: "false",
           amount_installments: 0,
-          related_installments: []
+          related_installments: [],
+          real_date:""
         },
         transactions: [],
         moneyInputConfig: {
@@ -351,7 +359,8 @@ export default {
           transaction_category: "",
           installment: "false",
           amount_installments: 0,
-          related_installments: []
+          related_installments: [],
+          data_real:""
         }
     }
 

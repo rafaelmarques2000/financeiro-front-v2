@@ -25,7 +25,7 @@
             </div>
 
           <no-content v-if="!data.dashboard.expense.length" message="Não há dados para mostrar"></no-content>
-          <div class="container-fluid expense-chart-content">
+          <div class="container-fluid expense-chart-content" v-show="data.dashboard.expense.length">
             <div class="row row-cols-1">
                <div class="col-md-6 dashboard-columns">
                  <div class="card">
@@ -139,24 +139,26 @@
                       </div>
                       <div class="card-body">
                         <no-content v-if="!data.dashboard.anualExpense.length" message="Não há dados para mostrar"></no-content>
-                        <table class="table table-striped">
-                       <thead class="page-table-header">
-                          <tr class="page-table-header">
-                              <td>Ano</td>
-                              <td>Receita</td>
-                              <td>Despesa</td>
-                              <td>Saldo</td>
-                          </tr>
-                       </thead>
-                       <tbody class="page-table-body">
-                          <tr v-for="item in data.dashboard.anualExpense">
-                            <td data-title="Ano">{{item.year}}</td>
-                            <td data-title="Receita"><money-format :value="item.positive"></money-format></td>
-                            <td data-title="Despesa"><money-format :value="(item.negative * -1)"></money-format></td>
-                            <td data-title="Total"><money-format :value="item.total"></money-format></td>
-                          </tr>  
-                        </tbody>
-                       </table> 
+                        <div  class="col-md-12 table-responsive" v-else>
+                            <table class="table table-striped">
+                            <thead class="page-table-header">
+                              <tr class="page-table-header">
+                                  <td>Ano</td>
+                                  <td>Receita</td>
+                                  <td>Despesa</td>
+                                  <td>Saldo</td>
+                              </tr>
+                           </thead>
+                           <tbody class="page-table-body">
+                              <tr v-for="item in data.dashboard.anualExpense">
+                                <td data-title="Ano">{{item.year}}</td>
+                                <td data-title="Receita"><money-format :value="item.positive"></money-format></td>
+                                <td data-title="Despesa"><money-format :value="(item.negative * -1)"></money-format></td>
+                                <td data-title="Total"><money-format :value="item.total"></money-format></td>
+                              </tr>
+                            </tbody>
+                           </table>
+                        </div>
                       </div>
                    </div>
               </div>
@@ -166,31 +168,35 @@
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
       <modal v-if="data.chartRankingModal.show" :title="data.chartRankingModal.title" @close-modal="data.chartRankingModal.show = false" :show-action-buttons="false" :show-close-button="true">
           <div class="modal-table-content" style="width: 100%">
-            <table class="table table-striped">
-              <thead class="page-table-header">
-              <tr class="page-table-header">
-                <td>Data</td>
-                <td>Conta origem</td>
-                <td>Descrição</td>
-                <td>Parcelado</td>
-                <td>Qtd Parcelas</td>
-                <td>Numero Parcela</td>
-                <td>Valor</td>
-              </tr>
-              </thead>
+            <div class="col-md-12 table-responsive">
+                <table class="table table-striped">
+                  <thead class="page-table-header">
+                  <tr class="page-table-header">
+                    <td>Data</td>
+                    <td>Data real</td>
+                    <td>Conta origem</td>
+                    <td>Descrição</td>
+                    <td>Parcelado</td>
+                    <td>Qtd Parcelas</td>
+                    <td>Numero Parcela</td>
+                    <td>Valor</td>
+                  </tr>
+                  </thead>
 
-              <tbody class="page-table-body">
-              <tr v-for="item in data.transactionList">
-                <td data-title="Data">{{item.date}}</td>
-                <td data-title="Conta origem" class="nowrap">{{item.account.description}}</td>
-                <td data-title="Descrição" class="nowrap">{{item.description}}</td>
-                <td data-title="Parcelado">{{item.installment ? "Sim":"Não"}}</td>
-                <td data-title="Qtd Parcelas">{{item.amount_installment}}</td>
-                <td data-title="Numero Parcela">{{item.current_installment}}</td>
-                <td data-title="Valor">{{formatMoneyBRL(item.amount)}}</td>
-              </tr>
-              </tbody>
-            </table>
+                  <tbody class="page-table-body">
+                  <tr v-for="item in data.transactionList">
+                    <td data-title="Data">{{item.date}}</td>
+                    <td data-title="Data real">{{formatEmptyValues(item.real_date)}}</td>
+                    <td data-title="Conta origem" class="nowrap">{{item.account.description}}</td>
+                    <td data-title="Descrição" class="nowrap">{{item.description}}</td>
+                    <td data-title="Parcelado">{{item.installment ? "Sim":"Não"}}</td>
+                    <td data-title="Qtd Parcelas">{{formatEmptyValues(item.amount_installment)}}</td>
+                    <td data-title="Numero Parcela">{{formatEmptyValues(item.current_installment)}}</td>
+                    <td data-title="Valor">{{formatMoneyBRL(item.amount)}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+            </div>
           </div>
       </modal>
 
@@ -208,9 +214,10 @@
    import {formatMoneyBRL} from "../../helper/moneyHelper";
    import Modal from "@/components/modal/modal.vue";
    import {getTransactionByCategory} from "@/services/api/transactionService";
+   import {formatEmptyValues} from "../../services/utils/helpers";
    export default {
        name : "dashboard",
-     methods: {formatMoneyBRL},
+     methods: {formatEmptyValues, formatMoneyBRL},
      components: {Modal, Loading, NoContent, PageTitle, MoneyFormat},
        setup(){
 
@@ -275,7 +282,6 @@
             data.categoryId = categoryId
             getTransactionByCategory(data)
          }
-
 
           onMounted(() => {
             const now = new Date()

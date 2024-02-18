@@ -4,7 +4,7 @@ import store from "../../store/index"
 let axiosOption = {
     baseURL:"https://api.globalapps.xyz/api/v1",
 }
-//
+
 // let axiosOption = {
 //     baseURL:"http://localhost:8005/api/v1",
 // }

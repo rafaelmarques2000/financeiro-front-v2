@@ -26,7 +26,15 @@ const getMoneyValue = (value) => {
     }
 }
 
+const formatEmptyValues = (value) => {
+    if(value === "" || value == null) {
+        return "-"
+    }
+    return value
+}
+
 export {
     formatMoneyBRL,
-    getMoneyValue
+    getMoneyValue,
+    formatEmptyValues
 }
