@@ -2,6 +2,12 @@
 
 import { register } from 'register-service-worker'
 
+register("/firebase-messaging-sw.js", {
+   registered() {
+      console.log("Registrado com sucesso")
+   }
+})
+
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {

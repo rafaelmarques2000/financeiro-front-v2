@@ -22,14 +22,12 @@ const validateAndLogin = (data, router) => {
     data.showLoading = true;
 
     authenticate(data).then(response =>{
-        console.log(response.data)
         data.showLoading = false;
         store.commit("enableAuth")
         store.commit("setUserData", response.data)
         router.push({name: "app"})
     }).catch(error => {
       try {
-          console.log(error)
           data.showLoading = false;
           alertError("Atencão", error.response.data.message)
       }catch (ex) {

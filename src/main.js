@@ -72,6 +72,7 @@ library.add(
 )
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
+console.log("test")
 createApp(App)
     .use(store)
     .use(router)
