@@ -6,7 +6,7 @@ import store from "../../store/index"
 // }
 
 let axiosOption = {
-    baseURL:"http://localhost:8005/api/v1",
+    baseURL:"http://192.168.0.107:8005/api/v1",
 }
 
 let client = axios.create(axiosOption)

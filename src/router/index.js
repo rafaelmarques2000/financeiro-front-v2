@@ -12,6 +12,7 @@ import {checkValidToken} from "@/services/api/authService";
 import Wishlistview from "@/views/wishlist/wishlistview.vue";
 import WishlistItemsview from "@/views/wishlist/wishlistItemsview.vue";
 import Categoriesview from "@/views/categoriesview/categoriesview.vue";
+import Alertsview from "@/views/alerts/alertsview.vue";
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
              path: '/app/modules/config/categories',
              name: 'config-categories',
              component: Categoriesview
+         },
+         {
+             path: '/app/modules/config/alerts',
+             name: 'alerts',
+             component: Alertsview
          }
      ]
   }

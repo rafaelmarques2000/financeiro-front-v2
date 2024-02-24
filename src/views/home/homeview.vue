@@ -31,6 +31,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><router-link to="/app/modules/config/categories" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-list" /> Categorias</router-link></li>
+              <li><router-link to="/app/modules/config/alerts" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-bell" /> Alertas</router-link></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -52,17 +53,51 @@
     import {alertConfirm} from "@/helper/alertHelper";
     import store from "@/store";
     import {useRouter} from "vue-router";
+    import {initializeApp} from "firebase/app";
+    import {getMessaging, getToken} from "firebase/messaging";
+    import {saveToken} from "@/services/api/firebaseService";
+    import {onMounted} from "vue";
 
     export default {
       components: {FontAwesomeIcon},
+
       setup(){
          let router = useRouter();
+
+        let saveFCMToken = () => {
+          const firebaseConfig = {
+            apiKey: "AIzaSyCiAWY3wcWo8ah-4fxNxeEUSOkctaZ1Fyg",
+            authDomain: "graninha-push-alert.firebaseapp.com",
+            projectId: "graninha-push-alert",
+            storageBucket: "graninha-push-alert.appspot.com",
+            messagingSenderId: "358604125063",
+            appId: "1:358604125063:web:200dc04cf7eebd77ff5922"
+          };
+
+          const firebaseApp = initializeApp(firebaseConfig);
+          const messaging = getMessaging(firebaseApp);
+
+          getToken(messaging)
+              .then((currentToken) => {
+                if (currentToken) {
+                  saveToken(currentToken)
+                } else {
+                  console.log('Não foi possível obter o token do dispositivo.');
+                }
+              })
+              .catch((error) => {
+                console.error('Erro ao obter o token do dispositivo:', error);
+              });
+        }
          const viewLogout = () => {
              alertConfirm("Confirmação", "Deseja deslogar do sistema?", () => {
                  store.commit("clearState")
                  router.push({name:"login"})
              })
          }
+         onMounted(() => {
+           saveFCMToken()
+         })
           return {
               viewLogout
           }
