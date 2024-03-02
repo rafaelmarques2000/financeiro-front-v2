@@ -4,12 +4,19 @@
           <page-title page-subtitle="Escolha um modulo para continuar" page-title="Seja bem-vindo, Admin"></page-title>
           <div class="row row-cols-2">
               <div class="col-md-2 col-margin" v-for="item in moduleList">
-                   <div class="card module-card" @click="openModule(item.url, item.standalone , item.external)">
-                        <div class="card-body flex-column d-flex align-items-center justify-content-center">
-                          <font-awesome-icon class="module-icon" :icon="item.icon" />
-                          <span class="module-name">{{item.title}}</span>
-                        </div>
-                   </div>
+
+                <div v-if="item.external" class="card module-card" @click="openExternal(item.url)">
+                  <div class="card-body flex-column d-flex align-items-center justify-content-center">
+                    <font-awesome-icon class="module-icon" :icon="item.icon" />
+                    <span class="module-name">{{item.title}}</span>
+                  </div>
+                </div>
+                 <div v-else class="card module-card" @click="openModule(item.url, item.standalone , item.external)">
+                      <div class="card-body flex-column d-flex align-items-center justify-content-center">
+                        <font-awesome-icon class="module-icon" :icon="item.icon" />
+                        <span class="module-name">{{item.title}}</span>
+                      </div>
+                 </div>
               </div>
           </div>
 
@@ -79,17 +86,12 @@
 
          let router = useRouter()
 
-         const openModule = (url, standalone, external) => {
+         const openModule = (url, standalone) => {
              if(standalone){
                 router.push({
                     name: url
                 })
                 return
-             }
-
-             if(external) {
-               window.open(url, '_blank');
-               return;
              }
 
             router.push(
@@ -100,9 +102,14 @@
             )
          }
 
+         const openExternal = (url) =>{
+           window.open(url, '_blank')
+         }
+
          return {
              moduleList,
-             openModule
+             openModule,
+             openExternal
          }
        }
     }
