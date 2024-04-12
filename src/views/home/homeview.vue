@@ -15,7 +15,7 @@
               <font-awesome-icon icon="fa-solid fa-list"></font-awesome-icon> Modulos
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><router-link to="/app/modules/dashboard" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-chart-line" /> Dashboard</router-link></li>
+              <li><a href="https://grafana.globalapps.xyz/d/fc2129c0-7323-4414-90c8-ed4a09dd97a2/gastos-mensais-graninha-4-0?orgId=1" class="nav-link dropdown-item" target="_blank" aria-current="page"><font-awesome-icon  icon="fa-solid fa-chart-line" /> Dashboard</a></li>
               <li><router-link to="/app/modules/contas" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-receipt" /> Contas</router-link></li>
               <li><router-link to="/app/modules/cartoes" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-credit-card" /> Cartões</router-link></li>
               <li><router-link to="/app/modules/caixa" class="nav-link dropdown-item" aria-current="page"><font-awesome-icon  icon="fa-solid fa-money-bill" /> Caixa</router-link></li>

@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <page-title page-subtitle="Gerencie seus items" :page-title="'Lista de desejos - ' + data.wishlist.description" icon="fa-solid fa-heart"></page-title>
+    <page-title page-subtitle="Gerencie seus itens" :page-title="'Lista de desejos - ' + data.wishlist.description" icon="fa-solid fa-heart"></page-title>
     <div class="page-action">
       <button class="btn btn-primary app-button" @click="openWishListModal" type="button" ><font-awesome-icon icon="fa-solid fa-circle-plus" /></button>
       <button class="btn btn-secondary app-button" @click="openCloseFilter" type="button"><font-awesome-icon icon="fa-solid fa-filter" /></button>

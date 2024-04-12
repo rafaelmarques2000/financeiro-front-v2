@@ -310,7 +310,7 @@ export default {
        transactionTypes: [],
        transactionCategories: [],
        inputLabels: [
-          "Descrição", "Nome Fatura", "Data" , "Tipo", "Categoria", "Valor", "Quantidade"
+          "Descrição", "Data" , "Tipo", "Categoria", "Valor", "Quantidade"
        ],
        selectStates: {
          categoryDisable: true,

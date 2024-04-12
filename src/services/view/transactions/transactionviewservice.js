@@ -40,14 +40,13 @@ const navigateTransactionPages = (data, route, direction) => {
 }
 
 const validateFormAndSubmit = (data, callback) => {
-    let properties = Object.getOwnPropertyNames(data.transaction);
+    let properties = Object.getOwnPropertyNames(data.transaction)
+        .filter( value => value !== "installment_description")
+        .filter(value => value !== "real_date")
+
     for(let i=0; i<properties.length; i++) {
 
-        if(properties[i] === "installment_description" || properties[i] === "real_date") {
-            continue;
-        }
-
-        if(data.transaction[properties[i]] === "" || data.transaction[properties[i]] == null) {
+        if(data.transaction[properties[i]] === "" || data.transaction[properties[i]] == null || data.transaction[properties[i]] === undefined) {
             alertError("Atenção",`Preencha o campo ${data.inputLabels[i]}`)
             return;
         }
