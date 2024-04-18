@@ -209,7 +209,7 @@
             </div>
 
             <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
-              <div class="col-md-12 table-responsive">
+              <div class="col-md-12 table-responsive" style="height: 300px; overflow: autogi ">
                   <table class="table table-striped">
                     <thead class="page-table-header">
                       <tr>
