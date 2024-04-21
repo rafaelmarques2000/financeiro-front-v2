@@ -23,6 +23,7 @@
 
 <script>
    import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+   import {onMounted, onUnmounted} from "vue";
 
    export default {
        name:"modal",
@@ -36,6 +37,14 @@
           const viewSave = () => {
              ctx.emit("save-data")
           }
+
+         onMounted(() => {
+           document.querySelector("body").style.overflow = "hidden"
+         })
+
+         onUnmounted(() => {
+           document.querySelector("body").style.overflow = "initial"
+         })
 
           return {
             viewCancel,
