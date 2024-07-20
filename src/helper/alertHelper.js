@@ -20,11 +20,11 @@ const alertSuccess = (title, message) => {
     });
 }
 
-const alertConfirm = (title, message, callback) => {
+const alertConfirm = (title, message, callback, callbackNo, icon) => {
     Swal.fire({
         title,
         text: message,
-        icon:"question",
+        icon: (icon == null || icon === '' || icon === undefined) ? 'question' : icon,
         showConfirmButton: true,
         confirmButtonText: 'Sim',
         showCancelButton: true,
@@ -32,6 +32,10 @@ const alertConfirm = (title, message, callback) => {
     }).then(result => {
         if(result.isConfirmed) {
             callback()
+        }else{
+            if(callbackNo != null || callbackNo !== undefined) {
+                 callbackNo()
+            }
         }
     })
 }

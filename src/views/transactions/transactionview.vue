@@ -139,102 +139,102 @@
          </nav>
        </div>
      </div>
-     <modal v-if="data.modal.show" @close-modal="viewCloseModal" :show-action-buttons="true" :show-close-button="true" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">
-          <div class="container-fluid">
+<!--     <modal v-if="data.modal.show" @close-modal="viewCloseModal" :show-action-buttons="true" :show-close-button="true" @save-data="viewModalSaveData" :title="data.modal.title" :icon="data.modal.icon">-->
+<!--          <div class="container-fluid">-->
 
-            <div class="row row-cols-1 transaction-form-rows">
-                <div class="col-md-4">
-                  <label for="description" class="form-label">Descrição</label>
-                  <input type="text" v-model="data.transaction.description"  class="form-control" id="description" placeholder="Digite um nome para sua conta" aria-describedby="descriptionHelp">
-                </div>
+<!--            <div class="row row-cols-1 transaction-form-rows">-->
+<!--                <div class="col-md-4">-->
+<!--                  <label for="description" class="form-label">Descrição</label>-->
+<!--                  <input type="text" v-model="data.transaction.description"  class="form-control" id="description" placeholder="Digite um nome para sua conta" aria-describedby="descriptionHelp">-->
+<!--                </div>-->
 
-                <div class="col-md-4">
-                  <label for="description" class="form-label">Nome na fatura</label>
-                  <input type="text" v-model="data.transaction.installment_description"  class="form-control" id="description" placeholder="Digite o nome que esta escrito na fatura" aria-describedby="descriptionHelp">
-                </div>
+<!--                <div class="col-md-4">-->
+<!--                  <label for="description" class="form-label">Nome na fatura</label>-->
+<!--                  <input type="text" v-model="data.transaction.installment_description"  class="form-control" id="description" placeholder="Digite o nome que esta escrito na fatura" aria-describedby="descriptionHelp">-->
+<!--                </div>-->
 
-                <div class="col-md-4">
-                  <label for="date" class="form-label">Data</label>
-                  <input type="date" v-model="data.transaction.date" class="form-control" id="date" placeholder="Digite a data da transação" aria-describedby="descriptionHelp">
-                </div>
-              </div>
+<!--                <div class="col-md-4">-->
+<!--                  <label for="date" class="form-label">Data</label>-->
+<!--                  <input type="date" v-model="data.transaction.date" class="form-control" id="date" placeholder="Digite a data da transação" aria-describedby="descriptionHelp">-->
+<!--                </div>-->
+<!--              </div>-->
 
-              <div class="row row-cols-1 transaction-form-rows">
-                <div class="col-md-4">
-                  <label for="date" class="form-label">Data real</label>
-                  <input type="date" v-model="data.transaction.real_date" class="form-control" id="real_date" placeholder="Digite a data real de compra" aria-describedby="descriptionHelp">
-                </div>
+<!--              <div class="row row-cols-1 transaction-form-rows">-->
+<!--                <div class="col-md-4">-->
+<!--                  <label for="date" class="form-label">Data real</label>-->
+<!--                  <input type="date" v-model="data.transaction.real_date" class="form-control" id="real_date" placeholder="Digite a data real de compra" aria-describedby="descriptionHelp">-->
+<!--                </div>-->
 
-                <div class="col-md-4">
-                  <label for="tipo" class="form-label">Tipo</label>
-                  <select class="form-select" v-model="data.transaction.transaction_type">
-                    <option value="">Selecione um tipo</option>
-                    <option v-for="item in data.transactionTypes" :value="item.id">{{item.description}}</option>
-                  </select>
-                </div>
+<!--                <div class="col-md-4">-->
+<!--                  <label for="tipo" class="form-label">Tipo</label>-->
+<!--                  <select class="form-select" v-model="data.transaction.transaction_type">-->
+<!--                    <option value="">Selecione um tipo</option>-->
+<!--                    <option v-for="item in data.transactionTypes" :value="item.id">{{item.description}}</option>-->
+<!--                  </select>-->
+<!--                </div>-->
 
-                <div class="col-md-4">
-                  <label for="categoria" class="form-label">Categoria</label>
-                  <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">
-                    <option value="">Selecione uma categoria</option>
-                    <option v-for="item in data.transactionCategories" :value="item.id">{{item.description}}</option>
-                  </select>
-                </div>
+<!--                <div class="col-md-4">-->
+<!--                  <label for="categoria" class="form-label">Categoria</label>-->
+<!--                  <select class="form-select" v-model="data.transaction.transaction_category" :disabled="data.selectStates.categoryDisable">-->
+<!--                    <option value="">Selecione uma categoria</option>-->
+<!--                    <option v-for="item in data.transactionCategories" :value="item.id">{{item.description}}</option>-->
+<!--                  </select>-->
+<!--                </div>-->
 
 
-              </div>
+<!--              </div>-->
 
-            <div  class="row row-cols-2 transaction-form-rows">
+<!--            <div  class="row row-cols-2 transaction-form-rows">-->
 
-              <div class="col-6">
-                <label for="valor" class="form-label">Valor</label>
-                <currency-input class="form-control" v-model="data.transaction.amount" :options="data.moneyInputConfig"></currency-input>
-              </div>
+<!--              <div class="col-6">-->
+<!--                <label for="valor" class="form-label">Valor</label>-->
+<!--                <currency-input class="form-control" v-model="data.transaction.amount" :options="data.moneyInputConfig"></currency-input>-->
+<!--              </div>-->
 
-              <div class="col-md-3" v-if="!isEdit">
-                <label for="categoria" class="form-label">Parcelamento ?</label>
-                <select class="form-select" v-model="data.transaction.installment">
-                  <option value="false">Não</option>
-                  <option value="true">Sim</option>
-                </select>
-              </div>
-              <div  class="col-md-1" v-if="!isEdit">
-                <label for="parcelas" class="form-label">Parcelas</label>
-                <input type="text" @keyup="viewSimulateInstallmentsAmount" v-model="data.transaction.amount_installments" class="form-control" :disabled="data.selectStates.installmentDisable" id="parcelas" placeholder="Parcelas">
-              </div>
-              <div  class="col-md-2" v-if="!isEdit">
-                <label for="valor_parcela" class="form-label">Valor parcela</label>
-                <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.simulateInstallment" disabled class="form-control"></CurrencyInput>
-              </div>
-            </div>
+<!--              <div class="col-md-3" v-if="!isEdit">-->
+<!--                <label for="categoria" class="form-label">Parcelamento ?</label>-->
+<!--                <select class="form-select" v-model="data.transaction.installment">-->
+<!--                  <option value="false">Não</option>-->
+<!--                  <option value="true">Sim</option>-->
+<!--                </select>-->
+<!--              </div>-->
+<!--              <div  class="col-md-1" v-if="!isEdit">-->
+<!--                <label for="parcelas" class="form-label">Parcelas</label>-->
+<!--                <input type="text" @keyup="viewSimulateInstallmentsAmount" v-model="data.transaction.amount_installments" class="form-control" :disabled="data.selectStates.installmentDisable" id="parcelas" placeholder="Parcelas">-->
+<!--              </div>-->
+<!--              <div  class="col-md-2" v-if="!isEdit">-->
+<!--                <label for="valor_parcela" class="form-label">Valor parcela</label>-->
+<!--                <CurrencyInput :options="{ currency: 'BRL' }" v-model="data.simulateInstallment" disabled class="form-control"></CurrencyInput>-->
+<!--              </div>-->
+<!--            </div>-->
 
-            <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
-              <div class="col-md-12 table-responsive" style="height: 300px; overflow: auto">
-                  <table class="table table-striped">
-                    <thead class="page-table-header">
-                      <tr>
-                        <td>Descrição</td>
-                        <td>Nome na fatura</td>
-                        <td>Competência</td>
-                        <td>Numero Parcela</td>
-                        <td>Valor</td>
-                      </tr>
-                    </thead>
-                   <tbody class="installment-table-body">
-                      <tr v-for="item in data.transaction.related_installments" class="page-table-row">
-                        <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>
-                        <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>
-                        <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
-                        <td data-title="Numero Parcela">{{ item.current_installment }}</td>
-                        <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
-                      </tr>
-                   </tbody>
-                  </table>
-              </div>
-            </div>
+<!--            <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">-->
+<!--              <div class="col-md-12 table-responsive" style="height: 300px; overflow: auto">-->
+<!--                  <table class="table table-striped">-->
+<!--                    <thead class="page-table-header">-->
+<!--                      <tr>-->
+<!--                        <td>Descrição</td>-->
+<!--                        <td>Nome na fatura</td>-->
+<!--                        <td>Competência</td>-->
+<!--                        <td>Numero Parcela</td>-->
+<!--                        <td>Valor</td>-->
+<!--                      </tr>-->
+<!--                    </thead>-->
+<!--                   <tbody class="installment-table-body">-->
+<!--                      <tr v-for="item in data.transaction.related_installments" class="page-table-row">-->
+<!--                        <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>-->
+<!--                        <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>-->
+<!--                        <td data-title="Competência">{{ item.month }}/{{item.year}}</td>-->
+<!--                        <td data-title="Numero Parcela">{{ item.current_installment }}</td>-->
+<!--                        <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>-->
+<!--                      </tr>-->
+<!--                   </tbody>-->
+<!--                  </table>-->
+<!--              </div>-->
+<!--            </div>-->
 
-            </div>
-     </modal>
+<!--            </div>-->
+<!--     </modal>-->
    </div>
 </template>
 
@@ -277,6 +277,7 @@ export default {
   components: {CurrencyInput, NoContent, Modal, MoneyFormat, Badge, Loading, PageTitle},
   setup(){
      let route = useRoute();
+     let router = useRouter();
      let data = reactive({
           modal:{
               title:"Nova Transação",
@@ -362,10 +363,7 @@ export default {
     }
 
     const viewOpenModalForm = () => {
-        data.modal.show = true
-        data.modal.operation = "new"
-        data.modal.title = "Nova transação"
-        data.modal.icon = "fa-solid fa-circle-plus"
+         router.push({name: "transaction-new-form", params:{module: route.params.module, id:route.params.id, operation:"new"}})
     }
 
     const viewCloseModal = () => {
@@ -410,13 +408,13 @@ export default {
         })
     }
 
-    const viewSimulateInstallmentsAmount = () => {
-       if(data.transaction.amount_installments === "") {
-           data.simulateInstallment = 0;
-           return;
-       }
-       data.simulateInstallment  =data.transaction.amount/ data.transaction.amount_installments
-    }
+    // const viewSimulateInstallmentsAmount = () => {
+    //    if(data.transaction.amount_installments === "") {
+    //        data.simulateInstallment = 0;
+    //        return;
+    //    }
+    //    data.simulateInstallment  =data.transaction.amount/ data.transaction.amount_installments
+    // }
 
     let viewCheckedTransaction = (transactionId, event) => {
       data.transactionId = transactionId
@@ -460,24 +458,24 @@ export default {
       data.pagination.pages = generatePagesArray(data.pagination.current_page, data.pagination.totalRows, data.pagination.limit, 8)
     })
 
-    watch(() => data.transaction.transaction_type , (transaction_type) => {
-      if(transaction_type === "") {
-        data.selectStates.categoryDisable = true;
-        data.transactionCategories = []
-        return
-      }
-      data.selectStates.categoryDisable = false
-      listTransactionCategories(data)
-    })
+    // watch(() => data.transaction.transaction_type , (transaction_type) => {
+    //   if(transaction_type === "") {
+    //     data.selectStates.categoryDisable = true;
+    //     data.transactionCategories = []
+    //     return
+    //   }
+    //   data.selectStates.categoryDisable = false
+    //   listTransactionCategories(data)
+    // })
 
-    watch(() => data.transaction.installment, (isInstalment) => {
-      if(isInstalment === "true") {
-        data.selectStates.installmentDisable = false
-        return
-      }
-      data.transaction.amount_installments = 0
-      data.selectStates.installmentDisable = true
-    })
+    // watch(() => data.transaction.installment, (isInstalment) => {
+    //   if(isInstalment === "true") {
+    //     data.selectStates.installmentDisable = false
+    //     return
+    //   }
+    //   data.transaction.amount_installments = 0
+    //   data.selectStates.installmentDisable = true
+    // })
 
      onMounted(() => {
          setInitialDateFilter(data)
@@ -485,7 +483,7 @@ export default {
          getTransactionStatisticAccountPeriod(data,route)
          getAccountTransactions(data, route)
          listTransactionType(data, (transaction_type) => {
-              listTransactionCategoriesExpense(data, transaction_type)
+
          })
      })
 
@@ -501,7 +499,6 @@ export default {
         viewOpenModalForm,
         viewDeleteAccountConfirmation: viewDeleteTransactionConfirmation,
         viewOpenModalEditForm,
-        viewSimulateInstallmentsAmount,
         isEdit,
         isRegisters,
         formatDateAndHour,

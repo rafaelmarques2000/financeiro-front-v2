@@ -12,6 +12,7 @@ import {checkValidToken} from "@/services/api/authService";
 import Wishlistview from "@/views/wishlist/wishlistview.vue";
 import WishlistItemsview from "@/views/wishlist/wishlistItemsview.vue";
 import Categoriesview from "@/views/categoriesview/categoriesview.vue";
+import Transactionformview from "@/views/transactions/transactionformview.vue";
 
 const routes = [
   {
@@ -39,6 +40,11 @@ const routes = [
          path: '/app/modules/:module/:id/transactions',
          name: 'transanctions_module',
          component: Transactions
+       },
+       {
+         path: '/app/modules/:module/:id/transactions/:operation/:transaction_id?',
+         name: 'transaction-new-form',
+         component: Transactionformview
        },
        {
          path: '/app/modules/cofrinhos',

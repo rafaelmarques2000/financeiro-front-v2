@@ -1,7 +1,7 @@
 import Store from "@/store";
 import {formatDate} from "@/services/utils/date";
 import httpService from "@/services/http/HttpService";
-import {alertError, alertSuccess} from "@/helper/alertHelper";
+import {alertConfirm, alertError, alertSuccess} from "@/helper/alertHelper";
 import Swal from "sweetalert2";
 import {getMoneyValue} from "@/services/utils/helpers";
 
@@ -95,13 +95,10 @@ function clearAndUpdateList(data, route) {
     data.simulateInstallment = null
     data.transaction.installment_description = null
     data.transaction.real_date = null
-    data.modal.show = false
     data.transaction.related_installments = []
-    getAccountTransactions(data, route)
-    getTransactionStatisticAccountPeriod(data, route)
 }
 
-const saveTransaction = (data, route) => {
+const saveTransaction = (data, route, router) => {
     let userId = Store.getters.userData.user_id
     let accountId = route.params.id
 
@@ -121,9 +118,11 @@ const saveTransaction = (data, route) => {
 
     httpService.post(`/users/${userId}/accounts/${accountId}/transactions`, transaction).then(result => {
        data.loading.show = false
-       alertSuccess("Sucesso!!", "Transação cadastrada com sucesso").then(alertResult => {
+       alertConfirm("Sucesso!!", "Transação cadastrada com sucesso, Deseja cadastrar uma nova transação?", ()=> {
            clearAndUpdateList(data, route);
-       })
+       }, () => {
+           router.push({name:"transanctions_module", params:{module:route.params.module, id:route.params.id}})
+       }, 'success')
     }).catch(error => {
         data.loading.show = false
         alertError("Atenção", "Falha ao cadastrar transação, tente novamente ou contate o administrador")
