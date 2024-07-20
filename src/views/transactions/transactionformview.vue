@@ -4,11 +4,9 @@
       <page-title :page-subtitle="`Conta: ${data.page.subtitle}`" :page-title="'Nova Transação'"></page-title>
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
 
-      <div class="card">
+      <div class="card" style="margin-bottom: 15px">
 
         <div class="card-body">
-
-
           <div class="row row-cols-1 transaction-form-rows">
             <div class="col-md-4">
               <label for="description" class="form-label">Descrição</label>
@@ -76,8 +74,8 @@
           </div>
 
           <div class="row" v-if="data.isInstallment && data.transaction.related_installments.length">
-            <div class="col-md-12 table-responsive" style="height: 300px; overflow: auto">
-              <table class="table table-striped">
+            <div class="col-md-12 table-responsive">
+              <table class="table table-striped page-table table-hover">
                 <thead class="page-table-header">
                 <tr>
                   <td>Descrição</td>
@@ -85,15 +83,17 @@
                   <td>Competência</td>
                   <td>Numero Parcela</td>
                   <td>Valor</td>
+                  <td></td>
                 </tr>
                 </thead>
-                <tbody class="installment-table-body">
+                <tbody class="page-table-body">
                 <tr v-for="item in data.transaction.related_installments" class="page-table-row">
                   <td data-title="Descrição"><input type="text" class="form-control installment-table-input-size" v-model="item.description"></td>
                   <td data-title="Nome na fatura"><input type="text" class="form-control installment-table-input-size" v-model="item.installment_description"></td>
                   <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
                   <td data-title="Numero Parcela">{{ item.current_installment }}</td>
                   <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
+                  <td data-title=""><a href="" class="btn btn-danger"><font-awesome-icon icon="fa-solid fa-trash"></font-awesome-icon> </a> </td>
                 </tr>
                 </tbody>
               </table>
@@ -121,12 +121,13 @@
     } from "@/services/api/TransactionCategoriesService";
     import {useRoute, useRouter} from "vue-router";
     import {validateFormAndSubmit} from "@/services/view/transactions/transactionviewservice";
-    import {saveTransaction, updateTransaction} from "@/services/api/transactionService";
+    import {getTransactionById, saveTransaction, updateTransaction} from "@/services/api/transactionService";
     import {getAccountByIdPromisse} from "@/services/api/accountService";
+    import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
     export  default  {
         name:"transaction-form-view",
-      components: {CurrencyInput, Loading, PageTitle},
+      components: {FontAwesomeIcon, CurrencyInput, Loading, PageTitle},
         setup() {
 
             let route = useRoute()
@@ -221,6 +222,11 @@
             getAccountByIdPromisse(route.params.id).then(result => {
                 data.page.subtitle = result.data.description
             })
+
+            if(route.params.operation === 'edit') {
+              data.transactionId = route.params.transaction_id
+              getTransactionById(data, route)
+            }
           })
 
           return  {
@@ -237,4 +243,8 @@
 
 <style scoped lang="scss">
 
+
+
+
+    @import "transactionstyle";
 </style>
