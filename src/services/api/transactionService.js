@@ -2,7 +2,6 @@ import Store from "@/store";
 import {formatDate} from "@/services/utils/date";
 import httpService from "@/services/http/HttpService";
 import {alertConfirm, alertError, alertSuccess} from "@/helper/alertHelper";
-import Swal from "sweetalert2";
 import {getMoneyValue} from "@/services/utils/helpers";
 
 
@@ -50,6 +49,7 @@ const getTransactionByCategory = (data) =>{
          data.transaction.related_installments = result.data.related_installments.filter((item) => {
              return item.current_installment !== result.data.current_installment
          })
+         data.page.title = `${result.data.description} - Parcela ${result.data.current_installment}`
      }).catch(error => {
          data.loading.show = false
          alertError("Atenção","Falha ao obter dados da transação");
@@ -129,7 +129,7 @@ const saveTransaction = (data, route, router) => {
     })
 }
 
-const updateTransaction = (data, route) => {
+const updateTransaction = (data, route, router) => {
     data.loading.show = true;
     let userId = Store.getters.userData.user_id
     let accountId = route.params.id
@@ -150,14 +150,13 @@ const updateTransaction = (data, route) => {
 
     httpService.put(`/users/${userId}/accounts/${accountId}/transactions/${data.transactionId}`, transaction).then(result => {
         data.loading.show = false
-        data.modal.show = false
         alertSuccess("Sucesso!!","Transação atualizada com sucesso!").then(result => {
             if(result.isConfirmed) {
-                clearAndUpdateList(data, route);
+                router.push({name:"transanctions_module", params:{module:route.params.module, id:route.params.id}})
             }
         })
     }).catch(error => {
-        data.modal.show = false
+        data.loading.show = false
         alertError("Atenção", "Falha ao atualizar transação!");
     })
 }
@@ -173,6 +172,24 @@ const deleteTransaction = (data, route) => {
             if(alertResult.isConfirmed) {
                 getAccountTransactions(data, route)
                 getTransactionStatisticAccountPeriod(data, route)
+            }
+        })
+    }).catch(error => {
+        data.loading.show = false
+        alertError("Atenção", "Falha ao deletar transação")
+    })
+}
+
+const deleteInstalmentTransaction = (data, route, id) => {
+    data.loading.show = true
+    let userId = Store.getters.userData.user_id
+    let accountId = route.params.id
+
+    return httpService.delete(`/users/${userId}/accounts/${accountId}/transactions/${id}`).then(result => {
+        data.loading.show = false
+        alertSuccess("Sucesso!!", "Parcela deletada com sucesso").then(alertResult => {
+            if(alertResult.isConfirmed) {
+                getTransactionById(data,route)
             }
         })
     }).catch(error => {
@@ -202,5 +219,6 @@ export {
     updateTransaction,
     checkAndUncheckTransaction,
     getTransactionById,
-    getTransactionByCategory
+    getTransactionByCategory,
+    deleteInstalmentTransaction
 }

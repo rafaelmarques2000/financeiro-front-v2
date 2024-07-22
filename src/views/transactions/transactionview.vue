@@ -307,14 +307,6 @@ export default {
         })
     }
 
-    // const viewSimulateInstallmentsAmount = () => {
-    //    if(data.transaction.amount_installments === "") {
-    //        data.simulateInstallment = 0;
-    //        return;
-    //    }
-    //    data.simulateInstallment  =data.transaction.amount/ data.transaction.amount_installments
-    // }
-
     let viewCheckedTransaction = (transactionId, event) => {
       data.transactionId = transactionId
       data.transactions = data.transactions.map((transaction) => {
@@ -341,9 +333,6 @@ export default {
     }
 
     //COMPUTED OR WATCHERS
-    const isEdit = computed(() => {
-         return data.modal.operation === "edit"
-    });
 
     const isRegisters = computed(() => {
       return data.transactions.length > 0
@@ -356,25 +345,6 @@ export default {
       }
       data.pagination.pages = generatePagesArray(data.pagination.current_page, data.pagination.totalRows, data.pagination.limit, 8)
     })
-
-    // watch(() => data.transaction.transaction_type , (transaction_type) => {
-    //   if(transaction_type === "") {
-    //     data.selectStates.categoryDisable = true;
-    //     data.transactionCategories = []
-    //     return
-    //   }
-    //   data.selectStates.categoryDisable = false
-    //   listTransactionCategories(data)
-    // })
-
-    // watch(() => data.transaction.installment, (isInstalment) => {
-    //   if(isInstalment === "true") {
-    //     data.selectStates.installmentDisable = false
-    //     return
-    //   }
-    //   data.transaction.amount_installments = 0
-    //   data.selectStates.installmentDisable = true
-    // })
 
      onMounted(() => {
          setInitialDateFilter(data)
@@ -398,7 +368,6 @@ export default {
         viewOpenModalForm,
         viewDeleteAccountConfirmation: viewDeleteTransactionConfirmation,
         viewOpenModalEditForm: viewOpenEditForm,
-        isEdit,
         isRegisters,
         formatDateAndHour,
         formatParceladoLabel,

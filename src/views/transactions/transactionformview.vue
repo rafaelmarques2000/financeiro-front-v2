@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
 
-      <page-title :page-subtitle="`Conta: ${data.page.subtitle}`" :page-title="'Nova Transação'"></page-title>
+      <page-title :page-subtitle="`Conta: ${data.page.subtitle}`" :page-title="data.page.title"></page-title>
       <loading v-if="data.loading.show" message="Processando aguarde..."></loading>
 
       <div class="card" style="margin-bottom: 15px">
@@ -93,7 +93,7 @@
                   <td data-title="Competência">{{ item.month }}/{{item.year}}</td>
                   <td data-title="Numero Parcela">{{ item.current_installment }}</td>
                   <td data-title="Valor"><CurrencyInput :options="data.moneyInputConfig" v-model="item.amount" class="form-control installment-table-input-size"></CurrencyInput></td>
-                  <td data-title=""><a href="" class="btn btn-danger"><font-awesome-icon icon="fa-solid fa-trash"></font-awesome-icon> </a> </td>
+                  <td data-title=""><a href="" @click.prevent="viewDeleteParcelas(item.id, item.description, item.current_installment)" class="btn btn-danger delete-parcela-button"><font-awesome-icon icon="fa-solid fa-trash"></font-awesome-icon> </a> </td>
                 </tr>
                 </tbody>
               </table>
@@ -112,7 +112,7 @@
 
     import PageTitle from "@/components/page_title/pagetile.vue";
     import Loading from "@/components/loading/loading.vue";
-    import {onMounted, reactive, watch} from "vue";
+    import {computed, onMounted, reactive, watch} from "vue";
     import CurrencyInput from "@/components/CurrencyInput.vue";
     import {listTransactionType} from "@/services/api/TransactionTypeService";
     import {
@@ -121,9 +121,15 @@
     } from "@/services/api/TransactionCategoriesService";
     import {useRoute, useRouter} from "vue-router";
     import {validateFormAndSubmit} from "@/services/view/transactions/transactionviewservice";
-    import {getTransactionById, saveTransaction, updateTransaction} from "@/services/api/transactionService";
+    import {
+      deleteInstalmentTransaction,
+      getTransactionById,
+      saveTransaction,
+      updateTransaction
+    } from "@/services/api/transactionService";
     import {getAccountByIdPromisse} from "@/services/api/accountService";
     import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+    import {alertConfirm} from "@/helper/alertHelper";
 
     export  default  {
         name:"transaction-form-view",
@@ -135,7 +141,8 @@
 
             let data = reactive({
               page:{
-                 subtitle:""
+                 subtitle:"",
+                 title:"",
               },
               transactionTypes: [],
               transactionCategories: [],
@@ -187,13 +194,23 @@
               if(route.params.operation === "new") {
                 saveTransaction(data, route, router)
               }else{
-                updateTransaction(data, route)
+                updateTransaction(data, route , router)
               }
             })
           }
 
           const cancelButtonAction = () => {
                router.push({name:"transanctions_module", params:{module:route.params.module, id:route.params.id}})
+          }
+
+          const isEdit = computed(() => {
+            return route.params.operation === "edit"
+          });
+
+          const viewDeleteParcelas = (id , description, current_installment)  => {
+              alertConfirm("Atenção", `Deseja deletar o ${description} - Parcela ${current_installment}?`, () => {
+                   deleteInstalmentTransaction(data, route, id)
+              })
           }
 
           watch(() => data.transaction.transaction_type , (transaction_type) => {
@@ -233,7 +250,9 @@
               data,
               viewSimulateInstallmentsAmount,
               viewModalSaveData,
-              cancelButtonAction
+              cancelButtonAction,
+              isEdit,
+              viewDeleteParcelas
           }
         }
     }
