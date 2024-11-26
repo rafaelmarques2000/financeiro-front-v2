@@ -6,7 +6,7 @@ import store from "../../store/index"
 // }
 
 let axiosOption = {
-    baseURL:"http://192.168.0.103:8005/api/v1",
+    baseURL:"http://192.168.254.202:8095/api/v1",
 }
 
 let client = axios.create(axiosOption)
