@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../../store/index"
 
 let axiosOption = {
-    baseURL:"https://api.globalapps.xyz/api/v1",
+    baseURL:"http://192.168.254.211:8093/api/v1",
 }
 
 // let axiosOption = {
